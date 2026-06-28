@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desfem Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Cloudinary Upload Widget -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a;
+            --card: #141414;
+            --border: #2a2a2a;
+            --text: #ffffff;
+            --muted: #888888;
+            --accent: #ffffff;
+            --danger: #ff4444;
+            --success: #00cc66;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-box h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .login-box h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 100px; }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+            width: 100%;
+        }
+
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 8px 16px;
+            font-size: 11px;
+        }
+
+        .btn-danger:hover { background: var(--danger); color: white; }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            font-size: 11px;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .admin-dashboard { display: none; }
+        .admin-dashboard.active { display: block; }
+
+        .admin-header {
+            padding: 20px 40px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 14px 24px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .panel h3 {
+            font-size: 20px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .upload-btn-cloudinary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 40px;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .upload-btn-cloudinary:hover {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-btn-cloudinary i {
+            font-size: 28px;
+            color: var(--muted);
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .items-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .item-row img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item-info h4 { font-size: 15px; margin-bottom: 4px; }
+        .item-info p { font-size: 12px; color: var(--muted); }
+
+        .item-actions { display: flex; gap: 8px; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 14px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Diagnostic Panel */
+        .diagnostic-panel {
+            background: rgba(0, 100, 255, 0.1);
+            border: 1px solid #0066ff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .diagnostic-panel h4 {
+            color: #0066ff;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .diagnostic-panel code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .status-ok { color: var(--success); }
+        .status-error { color: var(--danger); }
+
+        @media (max-width: 768px) {
+            .admin-header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+            .admin-container { padding: 20px; }
+            .panel { padding: 20px; }
+            .form-row { grid-template-columns: 1fr; }
+            .item-row { grid-template-columns: 60px 1fr; }
+            .item-row img { width: 60px; height: 60px; }
+            .item-actions { grid-column: 1 / -1; justify-content: flex-end; }
+            .tabs { gap: 4px; }
+            .tab { padding: 12px 16px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>Desfem Studios</h1>
+            <h2>Admin Portal</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="admin@desfem.studio">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" id="loginBtn">Sign In</button>
+            <p class="error-msg" id="loginError"></p>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div class="admin-dashboard" id="adminDashboard">
+        <div class="admin-header">
+            <h1>Admin Portal</h1>
+            <div class="user-info">
+                <span id="currentUserEmail"></span>
+                <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <div class="admin-container">
+            <div class="tabs">
+                <button class="tab active" data-tab="portfolio">Portfolio</button>
+                <button class="tab" data-tab="reviews">Reviews</button>
+                <button class="tab" data-tab="diagnostic">🔧 Diagnostic</button>
+            </div>
+
+            <!-- PORTFOLIO TAB -->
+            <div class="tab-content active" id="portfolioTab">
+                <div class="panel">
+                    <h3>Add New Photo</h3>
+
+                    <!-- Cloudinary Upload Button -->
+                    <button class="upload-btn-cloudinary" id="cloudinaryUploadBtn">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to Upload Photo</span>
+                    </button>
+
+                    <!-- Preview of selected image -->
+                    <img class="preview-img" id="previewImg" alt="Preview">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="photoTitle" placeholder="Shadow & Light">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="photoCategory">
+                                <option value="Editorial">Editorial</option>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Architecture">Architecture</option>
+                                <option value="Still Life">Still Life</option>
+                                <option value="Landscape">Landscape</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Year</label>
+                            <input type="text" id="photoYear" placeholder="2026">
+                        </div>
+                        <div class="form-group">
+                            <label>Order (display position)</label>
+                            <input type="number" id="photoOrder" placeholder="1" value="1">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="publishBtn" disabled>Publish to Site</button>
+                </div>
+
+                <div class="panel">
+                    <h3>Current Portfolio</h3>
+                    <div class="items-list" id="portfolioList"></div>
+                </div>
+            </div>
+
+            <!-- REVIEWS TAB -->
+            <div class="tab-content" id="reviewsTab">
+                <div class="panel">
+                    <h3>Add New Review</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input type="text" id="reviewName" placeholder="Sarah Mitchell">
+                        </div>
+                        <div class="form-group">
+                            <label>Role / Company</label>
+                            <input type="text" id="reviewRole" placeholder="Creative Director, Vogue">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Review Text</label>
+                        <textarea id="reviewText" placeholder="Write the client's review..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stars (1-5)</label>
+                            <input type="number" id="reviewStars" min="1" max="5" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Order</label>
+                            <input type="number" id="reviewOrder" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Client Avatar URL (optional)</label>
+                        <input type="text" id="reviewAvatar" placeholder="https://...">
+                    </div>
+                    <button class="btn btn-primary" id="addReviewBtn">Add Review</button>
+                </div>
+
+                <div class="panel">
+                    <h3>Current Reviews</h3>
+                    <div class="items-list" id="reviewsList"></div>
+                </div>
+            </div>
+
+            <!-- DIAGNOSTIC TAB -->
+            <div class="tab-content" id="diagnosticTab">
+                <div class="panel">
+                    <h3>🔧 System Diagnostic</h3>
+                    <div id="diagnosticResults"></div>
+                    <button class="btn btn-primary" id="runDiagnosticBtn" style="margin-top:20px;">Run Diagnostic Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // ============================================
+        // ⚙️ CLOUDINARY CONFIGURATION
+        // ============================================
+        const CLOUDINARY_CONFIG = {
+            cloudName: 'dcdxmcv5x',
+            uploadPreset: 'desfem_uploads'
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ============ AUTH ============
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('adminDashboard');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginScreen.style.display = 'none';
+                dashboard.classList.add('active');
+                document.getElementById('currentUserEmail').textContent = user.email;
+                loadPortfolioList();
+                loadReviewsList();
+                runDiagnostic(); // Auto-run diagnostic on login
+            } else {
+                loginScreen.style.display = 'flex';
+                dashboard.classList.remove('active');
+            }
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+            errorEl.style.display = 'none';
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showToast('Welcome back!', 'success');
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.style.display = 'block';
+            }
+        });
+
+        document.getElementById('loginPassword').addEventListener('keypress', e => {
+            if (e.key === 'Enter') document.getElementById('loginBtn').click();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+        // ============ TABS ============
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+            });
+        });
+
+        // ============ TOAST ============
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ============ DIAGNOSTIC ============
+        function runDiagnostic() {
+            const results = document.getElementById('diagnosticResults');
+            if (!results) return;
+
+            let html = '<div class="diagnostic-panel"><h4>System Status</h4>';
+
+            // Check 1: Cloudinary library loaded
+            const cloudinaryLoaded = typeof cloudinary !== 'undefined';
+            html += `<p><strong>Cloudinary Library:</strong> <span class="${cloudinaryLoaded ? 'status-ok' : 'status-error'}">${cloudinaryLoaded ? '✅ Loaded' : '❌ Not loaded'}</span></p>`;
+
+            // Check 2: Cloud Name
+            const cloudNameValid = CLOUDINARY_CONFIG.cloudName && CLOUDINARY_CONFIG.cloudName !== 'YOUR_CLOUD_NAME';
+            html += `<p><strong>Cloud Name:</strong> <code>${CLOUDINARY_CONFIG.cloudName}</code> <span class="${cloudNameValid ? 'status-ok' : 'status-error'}">${cloudNameValid ? '✅ Set' : '❌ Not set'}</span></p>`;
+
+            // Check 3: Upload Preset
+            const presetValid = CLOUDINARY_CONFIG.uploadPreset && CLOUDINARY_CONFIG.uploadPreset !== 'YOUR_PRESET';
+            html += `<p><strong>Upload Preset:</strong> <code>${CLOUDINARY_CONFIG.uploadPreset}</code> <span class="${presetValid ? 'status-ok' : 'status-error'}">${presetValid ? '✅ Set' : '❌ Not set'}</span></p>`;
+
+            // Check 4: Firebase
+            const firebaseLoaded = typeof firebase !== 'undefined';
+            html += `<p><strong>Firebase:</strong> <span class="${firebaseLoaded ? 'status-ok' : 'status-error'}">${firebaseLoaded ? '✅ Loaded' : '❌ Not loaded'}</span></p>`;
+
+            // Check 5: User logged in
+            const userLoggedIn = !!firebase.auth().currentUser;
+            html += `<p><strong>User Logged In:</strong> <span class="${userLoggedIn ? 'status-ok' : 'status-error'}">${userLoggedIn ? '✅ Yes' : '❌ No'}</span></p>`;
+
+            html += '</div>';
+
+            if (!cloudinaryLoaded || !cloudNameValid || !presetValid) {
+                html += `<div class="diagnostic-panel" style="background:rgba(255,68,68,0.1); border-color:var(--danger);">
+                    <h4 style="color:var(--danger);">⚠️ Setup Required</h4>
+                    <p><strong>To fix Cloudinary uploads:</strong></p>
+                    <ol style="margin-left:20px; line-height:2;">
+                        <li>Go to <a href="https://cloudinary.com" target="_blank" style="color:var(--accent);">cloudinary.com</a> → Login</li>
+                        <li>Click ⚙️ <strong>Settings</strong> (top right)</li>
+                        <li>Click <strong>Upload</strong> tab</li>
+                        <li>Scroll to <strong>Upload presets</strong> → Click <strong>Add upload preset</strong></li>
+                        <li>Set <strong>Preset name</strong>: <code>desfem_uploads</code></li>
+                        <li>⚠️ CRITICAL: Set <strong>Signing Mode</strong> to <strong style="color:#ff4444">Unsigned</strong></li>
+                        <li>Click <strong>Save</strong></li>
+                        <li>Refresh this page and try again</li>
+                    </ol>
+                </div>`;
+            } else {
+                html += `<div class="diagnostic-panel" style="background:rgba(0,204,102,0.1); border-color:var(--success);">
+                    <h4 style="color:var(--success);">✅ All Systems Ready</h4>
+                    <p>Everything looks good! Try uploading a photo in the Portfolio tab.</p>
+                    <p style="margin-top:10px;"><strong>If uploads still fail:</strong> The most common issue is that the upload preset is set to "Signed" instead of "Unsigned". Go to Cloudinary Settings → Upload → Upload presets → Edit your preset → Change Signing Mode to "Unsigned".</p>
+                </div>`;
+            }
+
+            results.innerHTML = html;
+        }
+
+        document.getElementById('runDiagnosticBtn')?.addEventListener('click', runDiagnostic);
+
+        // ============ CLOUDINARY UPLOAD ============
+        let uploadedImageUrl = null;
+        const previewImg = document.getElementById('previewImg');
+        const publishBtn = document.getElementById('publishBtn');
+
+        document.getElementById('cloudinaryUploadBtn').addEventListener('click', () => {
+            console.log('Upload button clicked');
+            console.log('Cloudinary object:', typeof cloudinary);
+            console.log('Config:', CLOUDINARY_CONFIG);
+
+            if (typeof cloudinary === 'undefined') {
+                showToast('❌ Cloudinary library not loaded. Check your internet connection.', 'error');
+                return;
+            }
+
+            if (!CLOUDINARY_CONFIG.cloudName || CLOUDINARY_CONFIG.cloudName === 'YOUR_CLOUD_NAME') {
+                showToast('❌ Cloud Name not configured. Check the Diagnostic tab.', 'error');
+                return;
+            }
+
+            if (!CLOUDINARY_CONFIG.uploadPreset || CLOUDINARY_CONFIG.uploadPreset === 'YOUR_PRESET') {
+                showToast('❌ Upload Preset not configured. Check the Diagnostic tab.', 'error');
+                return;
+            }
+
+            try {
+                const widget = cloudinary.createUploadWidget({
+                    cloudName: CLOUDINARY_CONFIG.cloudName,
+                    uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
+                    sources: ['local', 'camera', 'url'],
+                    multiple: false,
+                    maxFileSize: 10000000,
+                    cropping: false,
+                    clientAllowedFormats: ['jpg', 'png', 'webp', 'jpeg'],
+                    styles: {
+                        palette: {
+                            window: "#141414",
+                            windowBorder: "#2a2a2a",
+                            tabIcon: "#ffffff",
+                            menuIcons: "#888888",
+                            textDark: "#ffffff",
+                            textLight: "#888888",
+                            link: "#ffffff",
+                            action: "#ffffff",
+                            inactiveTabIcon: "#888888",
+                            error: "#ff4444",
+                            inProgress: "#ffffff",
+                            complete: "#00cc66",
+                            sourceBg: "#0a0a0a"
+                        }
+                    }
+                }, (error, result) => {
+                    console.log('Cloudinary callback:', { error, result });
+
+                    if (error) {
+                        console.error('Cloudinary error:', error);
+                        showToast('Upload error: ' + (error.message || JSON.stringify(error)), 'error');
+                        return;
+                    }
+
+                    if (result && result.event === 'success') {
+                        console.log('Upload success:', result.info);
+                        uploadedImageUrl = result.info.secure_url;
+                        previewImg.src = uploadedImageUrl;
+                        previewImg.style.display = 'block';
+                        publishBtn.disabled = false;
+                        showToast('✅ Image uploaded! Fill in details and publish.', 'success');
+                    } else if (result && result.event === 'close') {
+                        console.log('Widget closed');
+                    } else if (result) {
+                        console.log('Other event:', result.event, result);
+                    }
+                });
+
+                console.log('Opening widget...');
+                widget.open();
+            } catch (err) {
+                console.error('Widget creation error:', err);
+                showToast('Failed to open upload widget: ' + err.message, 'error');
+            }
+        });
+
+        // ============ PUBLISH TO FIREBASE ============
+        publishBtn.addEventListener('click', async () => {
+            if (!uploadedImageUrl) {
+                showToast('Please upload an image first', 'error');
+                return;
+            }
+
+            const title = document.getElementById('photoTitle').value.trim();
+            const category = document.getElementById('photoCategory').value;
+            const year = document.getElementById('photoYear').value.trim();
+            const order = parseInt(document.getElementById('photoOrder').value) || 1;
+
+            if (!title || !year) {
+                showToast('Please fill in title and year', 'error');
+                return;
+            }
+
+            publishBtn.disabled = true;
+            publishBtn.innerHTML = '<span class="loading"></span> Publishing...';
+
+            try {
+                await db.collection('portfolio').add({
+                    title,
+                    category,
+                    year,
+                    order,
+                    imageUrl: uploadedImageUrl,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showToast('Photo published to site!', 'success');
+
+                uploadedImageUrl = null;
+                previewImg.style.display = 'none';
+                document.getElementById('photoTitle').value = '';
+                document.getElementById('photoYear').value = '';
+                document.getElementById('photoOrder').value = '1';
+                publishBtn.disabled = true;
+            } catch (err) {
+                console.error(err);
+                showToast('Publish failed: ' + err.message, 'error');
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.innerHTML = 'Publish to Site';
+            }
+        });
+
+        // ============ LOAD PORTFOLIO LIST ============
+        function loadPortfolioList() {
+            const list = document.getElementById('portfolioList');
+            db.collection('portfolio').onSnapshot(snapshot => {
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="color:var(--muted)">No photos yet. Upload your first one above.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    row.innerHTML = `
+                        <img src="${d.imageUrl}" alt="${d.title}">
+                        <div class="item-info">
+                            <h4>${d.title}</h4>
+                            <p>${d.category} • ${d.year} • Order: ${d.order}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-danger" onclick="deletePortfolio('${doc.id}')">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+            });
+        }
+
+        window.deletePortfolio = async (id) => {
+            if (!confirm('Delete this photo?')) return;
+            try {
+                await db.collection('portfolio').doc(id).delete();
+                showToast('Photo deleted', 'success');
+            } catch (err) {
+                showToast('Delete failed: ' + err.message, 'error');
+            }
+        };
+
+        // ============ REVIEWS ============
+        document.getElementById('addReviewBtn').addEventListener('click', async () => {
+            const name = document.getElementById('reviewName').value.trim();
+            const role = document.getElementById('reviewRole').value.trim();
+            const text = document.getElementById('reviewText').value.trim();
+            const stars = parseInt(document.getElementById('reviewStars').value) || 5;
+            const order = parseInt(document.getElementById('reviewOrder').value) || 1;
+            const avatarUrl = document.getElementById('reviewAvatar').value.trim();
+
+            if (!name || !text) {
+                showToast('Please fill in name and review text', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('addReviewBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Saving...';
+
+            try {
+                await db.collection('reviews').add({
+                    name, role, text, stars, order, avatarUrl,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('Review added!', 'success');
+                document.getElementById('reviewName').value = '';
+                document.getElementById('reviewRole').value = '';
+                document.getElementById('reviewText').value = '';
+                document.getElementById('reviewAvatar').value = '';
+            } catch (err) {
+                showToast('Failed: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Add Review';
+            }
+        });
+
+        function loadReviewsList() {
+            const list = document.getElementById('reviewsList');
+            db.collection('reviews').onSnapshot(snapshot => {
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="color:var(--muted)">No reviews yet.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    row.innerHTML = `
+                        <img src="${d.avatarUrl || 'https://via.placeholder.com/80'}" alt="${d.name}">
+                        <div class="item-info">
+                            <h4>${d.name}</h4>
+                            <p>${d.role} • ${'★'.repeat(d.stars || 5)}</p>
+                            <p style="margin-top:4px;font-style:italic;">"${d.text.substring(0, 80)}${d.text.length > 80 ? '...' : ''}"</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-danger" onclick="deleteReview('${doc.id}')">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+            });
+        }
+
+        window.deleteReview = async (id) => {
+            if (!confirm('Delete this review?')) return;
+            try {
+                await db.collection('reviews').doc(id).delete();
+                showToast('Review deleted', 'success');
+            } catch (err) {
+                showToast('Delete failed: ' + err.message, 'error');
+            }
+        };
+    </script>
+</body>
+</html>
