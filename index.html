@@ -795,8 +795,8 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="#work">Work</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#services">Services</a></li> 
             <li><a href="#reviews">Reviews</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -852,7 +852,7 @@
             </div>
         </div>
         <div class="about-image reveal">
-            <img src="upload.jpg" alt="Studio">
+            <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80" alt="Studio">
         </div>
     </section>
 
@@ -955,35 +955,43 @@
             });
         });
 
-        // Load Portfolio from Firebase (real-time)
-        function loadPortfolio() {
-            const grid = document.getElementById('portfolioGrid');
-            db.collection('portfolio').onSnapshot(snapshot => {
-                grid.innerHTML = '';
-                if (snapshot.empty) {
-                    grid.innerHTML = '<p class="empty-state">No photos yet — check back soon</p>';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const item = doc.data();
-                    if (!item.imageUrl) return;
-                    const div = document.createElement('div');
-                    div.className = 'portfolio-item reveal active';
-                    div.innerHTML = `
-                        <img src="${item.imageUrl}" alt="${item.title || 'Photo'}" loading="lazy">
-                        <div class="portfolio-overlay">
-                            <h3>${item.title || ''}</h3>
-                            <p>${item.category || ''} — ${item.year || ''}</p>
-                        </div>
-                    `;
-                    grid.appendChild(div);
-                });
-            }, error => {
-                console.error('Portfolio load error:', error);
-                grid.innerHTML = '<p class="empty-state">Unable to load portfolio</p>';
-            });
+        // Load ONLY FEATURED photos from Firebase (real-time)
+function loadPortfolio() {
+    const grid = document.getElementById('portfolioGrid');
+    db.collection('portfolio').onSnapshot(snapshot => {
+        grid.innerHTML = '';
+        
+        // Filter to only show featured photos
+        const featuredItems = [];
+        snapshot.forEach(doc => {
+            const item = doc.data();
+            if (item.imageUrl && item.featured === true) {
+                featuredItems.push(item);
+            }
+        });
+        
+        if (featuredItems.length === 0) {
+            grid.innerHTML = '<p class="empty-state">No featured photos yet — check back soon</p>';
+            return;
         }
-
+        
+        featuredItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'portfolio-item reveal active';
+            div.innerHTML = `
+                <img src="${item.imageUrl}" alt="${item.title || 'Photo'}" loading="lazy">
+                <div class="portfolio-overlay">
+                    <h3>${item.title || ''}</h3>
+                    <p>${item.category || ''} — ${item.year || ''}</p>
+                </div>
+            `;
+            grid.appendChild(div);
+        });
+    }, error => {
+        console.error('Portfolio load error:', error);
+        grid.innerHTML = '<p class="empty-state">Unable to load portfolio</p>';
+    });
+}
         // Load Reviews from Firebase (real-time)
         function loadReviews() {
             const grid = document.getElementById('reviewsGrid');
