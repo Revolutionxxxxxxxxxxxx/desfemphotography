@@ -354,7 +354,7 @@
             background: #000;
         }
 
-        /* 🎬 Video items — natural aspect ratio (no forced 16:9) */
+        /* 🎬 Video items — natural aspect ratio */
         .gallery-item.video-item {
             aspect-ratio: auto;
             min-height: 220px;
@@ -644,47 +644,95 @@
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Responsive */
+        /* ============================================
+           📱 TABLET & iPad (up to 1024px)
+           ============================================ */
         @media (max-width: 1024px) {
             nav > .nav-links { display: none; }
             .menu-toggle { display: flex; }
             nav { padding: 16px 24px; top: 12px; width: calc(100% - 24px); }
             .logo img { height: 40px; }
+            
             .gallery-hero { padding: 110px 24px 40px; min-height: 45vh; }
             .gallery-hero h1 { font-size: clamp(38px, 10vw, 72px); letter-spacing: -2px; margin-bottom: 16px; }
             .gallery-hero p { font-size: 10px; letter-spacing: 3px; line-height: 1.7; }
+            
             .filter-container { padding: 0 20px; margin-bottom: 40px; gap: 8px; }
             .filter-btn { padding: 10px 18px; font-size: 10px; letter-spacing: 1.5px; }
+            
             .gallery-section { padding: 0 20px 80px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            
+            /* 📱 Smaller grid items on tablet */
+            .gallery-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 12px; 
+            }
+            
+            /* Photos: 4:3 aspect ratio instead of 1:1 */
+            .gallery-item {
+                aspect-ratio: 4 / 3;
+            }
+            
+            /* Videos: much smaller on tablet */
+            .gallery-item.video-item { 
+                max-height: 280px;
+                min-height: 180px;
+            }
+            
             .gallery-item-overlay { opacity: 1; padding: 16px; }
             .gallery-item-overlay h3 { font-size: 14px; }
             .gallery-item-overlay p { font-size: 9px; }
             .gallery-item-overlay .view-icon { display: none; }
-            .gallery-item.video-item { max-height: 400px; }
+            
+            /* Lightbox stays large */
             .lightbox-nav { width: 44px; height: 44px; font-size: 16px; }
             .lightbox-prev { left: 10px; }
             .lightbox-next { right: 10px; }
             .lightbox-close { top: 15px; right: 15px; width: 44px; height: 44px; }
             .lightbox-info h3 { font-size: 20px; }
             .lightbox-info p { font-size: 10px; letter-spacing: 2px; }
+            
             footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; border-radius: 24px; margin: 0 12px 12px; }
             footer p { font-size: 10px; }
             .footer-links { gap: 16px; flex-wrap: wrap; justify-content: center; }
             .footer-links a { font-size: 10px; }
         }
 
+        /* ============================================
+           📱 MOBILE (up to 480px)
+           ============================================ */
         @media (max-width: 480px) {
             nav { padding: 12px 16px; }
             .logo img { height: 34px; }
+            
             .gallery-hero { padding: 100px 20px 32px; min-height: 40vh; }
             .gallery-hero h1 { font-size: clamp(34px, 11vw, 56px); letter-spacing: -1px; }
             .gallery-hero p { font-size: 9px; letter-spacing: 2.5px; }
+            
             .filter-container { padding: 0 16px; margin-bottom: 32px; gap: 6px; }
             .filter-btn { padding: 8px 14px; font-size: 9px; letter-spacing: 1px; }
+            
             .gallery-section { padding: 0 16px 60px; }
-            .gallery-grid { grid-template-columns: 1fr; gap: 14px; }
-            .gallery-item.video-item { max-height: 320px; }
+            
+            /* 📱 Single column, smaller items */
+            .gallery-grid { 
+                grid-template-columns: 1fr; 
+                gap: 14px; 
+            }
+            
+            /* Photos: 4:5 aspect ratio (portrait) */
+            .gallery-item {
+                aspect-ratio: 4 / 5;
+                max-width: 100%;
+            }
+            
+            /* Videos: much smaller on mobile */
+            .gallery-item.video-item { 
+                max-height: 240px;
+                min-height: 160px;
+            }
+            
+            /* Lightbox stays full size */
             .lightbox-nav { width: 40px; height: 40px; font-size: 14px; }
             .lightbox-close { width: 40px; height: 40px; }
             .lightbox-media-wrapper video { width: 95vw; }
@@ -919,7 +967,6 @@
                             <p>${item.category} — ${item.year}</p>
                         </div>
                     `;
-                    // Auto-play preview on hover
                     const video = div.querySelector('video');
                     div.addEventListener('mouseenter', () => video.play().catch(() => {}));
                     div.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
