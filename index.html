@@ -32,13 +32,12 @@
             position: relative;
         }
 
-        /* Full-page Background Image */
         .bg-image {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: -2;
-            background-image: url('mobile-bg.jpg');
+            background-image: url('_.jpeg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -53,7 +52,6 @@
             background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* Grain Overlay */
         .grain {
             position: fixed;
             top: 0; left: 0;
@@ -66,7 +64,6 @@
             background-size: 200px;
         }
 
-        /* Navigation */
         nav {
             position: fixed;
             top: 20px;
@@ -89,12 +86,23 @@
                         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
         }
 
+        /* 🎨 LOGO IMAGE STYLES */
         .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            display: block;
         }
 
         .nav-links {
@@ -128,7 +136,6 @@
 
         .nav-links a:hover::after { width: 100%; }
 
-        /* Mobile Menu Toggle */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -149,7 +156,6 @@
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-        /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -203,7 +209,6 @@
 
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        /* Marquee */
         .marquee-section {
             padding: 30px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -233,7 +238,6 @@
 
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* Portfolio Section */
         .portfolio { padding: 120px 50px; }
 
         .section-header {
@@ -313,7 +317,6 @@
         .portfolio-overlay h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 5px; }
         .portfolio-overlay p { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
 
-        /* About Section */
         .about {
             padding: 120px 50px;
             display: grid;
@@ -375,7 +378,6 @@
 
         .about-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1); }
 
-        /* Services */
         .services { padding: 120px 50px; }
 
         .services-list {
@@ -410,7 +412,6 @@
         .service-desc { font-size: 13px; color: var(--gray); line-height: 1.6; }
         .service-arrow { font-size: 20px; transition: transform 0.4s ease; text-align: right; }
 
-        /* Reviews Section */
         .reviews { padding: 120px 50px; }
 
         .reviews-grid {
@@ -456,7 +457,6 @@
         .review-author-info h4 { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .review-author-info p { font-size: 12px; color: var(--gray); }
 
-        /* Contact Section */
         .contact { padding: 120px 50px; text-align: center; }
 
         .contact h2 {
@@ -531,7 +531,6 @@
         .contact-info-item h4 { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; }
         .contact-info-item p { font-size: 14px; color: var(--off-white); }
 
-        /* Social Links */
         .social-links { display: flex; justify-content: center; gap: 24px; margin-top: 60px; }
 
         .social-link {
@@ -556,7 +555,6 @@
         .social-link.whatsapp:hover { background: #25D366; border-color: #25D366; }
         .social-link.instagram:hover { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-color: transparent; }
 
-        /* Footer */
         footer {
             padding: 30px 50px;
             margin: 0 20px 20px;
@@ -576,11 +574,9 @@
         .footer-links a { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--gray); text-decoration: none; text-transform: uppercase; transition: color 0.3s ease; }
         .footer-links a:hover { color: var(--white); }
 
-        /* Reveal Animations */
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Empty state message */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -603,7 +599,7 @@
                 border-radius: 60px;
             }
 
-            .logo { font-size: 11px; letter-spacing: 3px; }
+            .logo img { height: 32px; }
             .menu-toggle { display: flex; }
 
             .nav-links {
@@ -703,7 +699,7 @@
            ============================================ */
         @media (min-width: 481px) and (max-width: 768px) {
             nav { padding: 14px 24px; top: 12px; width: calc(100% - 24px); }
-            .logo { font-size: 12px; }
+            .logo img { height: 36px; }
             .menu-toggle { display: flex; }
 
             .nav-links {
@@ -770,14 +766,12 @@
             .review-card { padding: 32px; }
         }
 
-        /* Touch devices - show overlays always */
         @media (hover: none) {
             .portfolio-overlay { opacity: 1; }
             .portfolio-item img { filter: grayscale(0%) contrast(1); }
             .service-item:hover { transform: none; }
         }
 
-        /* Landscape on small devices */
         @media (max-height: 500px) and (orientation: landscape) {
             .hero { height: auto; min-height: 100vh; padding: 80px 30px 40px; }
             .hero-title { font-size: clamp(40px, 8vw, 80px); }
@@ -792,7 +786,9 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logo">Desfem</div>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Desfem Studios Logo">
+        </a>
         <div class="menu-toggle" id="menuToggle">
             <span></span><span></span><span></span>
         </div>
@@ -800,6 +796,7 @@
             <li><a href="#work">Work</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
             <li><a href="#reviews">Reviews</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -909,14 +906,14 @@
         <div class="reveal">
             <p class="contact-subtitle">Let's create something bold together</p>
             <h2>Get in <span class="italic">touch</span></h2>
-            <a href="mailto:hello@desfem.studio" class="contact-btn">Start a Project</a>
+            <a href="mailto:desfemphotography@gmail.com" class="contact-btn">Start a Project</a>
             <div class="social-links">
-                <a href="https://wa.me/2348077784875" target="_blank" class="social-link whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://wa.me/2348077784875?text=Hello%20Desfem%20Studios%2C%20I%27d%20like%20to%20inquire%20about%20your%20photography%20services." target="_blank" class="social-link whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://instagram.com/desfem_photography" target="_blank" class="social-link instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
             </div>
             <div class="contact-info">
                 <div class="contact-info-item"><h4>Email</h4><p>desfemphotography@gmail.com</p></div>
-                <div class="contact-info-item"><h4>Phone</h4><p>+2348077784875</p></div>
+                <div class="contact-info-item"><h4>Phone</h4><p>+234 807 778 4875</p></div>
                 <div class="contact-info-item"><h4>Studio</h4><p>Abuja, Nigeria</p></div>
             </div>
         </div>
@@ -926,7 +923,7 @@
     <footer>
         <p>© 2026 Desfem Studios. All rights reserved.</p>
         <div class="footer-links">
-            <a href="#">Instagram</a>
+            <a href="https://instagram.com/desfem_photography" target="_blank">Instagram</a>
             <a href="#">Behance</a>
             <a href="#">Vimeo</a>
         </div>
