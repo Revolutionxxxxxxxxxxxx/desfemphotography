@@ -16,70 +16,217 @@
             --gray: #888888;
             --dark-gray: #1a1a1a;
             --accent: #c8c8c8;
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-highlight: rgba(255, 255, 255, 0.18);
-            --glass-blur: 24px;
         }
 
         html { scroll-behavior: smooth; }
+        body { background-color: var(--black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; position: relative; }
 
-        body {
-            background-color: var(--black);
-            color: var(--white);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            position: relative;
+        /* ============================================
+           🎬 CINEMATIC INTRO — 10+ seconds with illuminating slogan
+           ============================================ */
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            animation: introFadeOut 1.8s cubic-bezier(0.4, 0, 0.2, 1) 9.5s forwards;
         }
 
+        /* Soft ambient glow behind the logo */
+        .intro-overlay::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: ambientGlow 2.5s ease-out 0.5s forwards;
+            pointer-events: none;
+        }
+
+        .intro-logo {
+            height: 130px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0.8);
+            filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+            animation: introLogoIn 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-line {
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: introLineExpand 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-slogan {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(15px, 2.2vw, 20px);
+            letter-spacing: 2px;
+            color: var(--off-white);
+            text-align: center;
+            max-width: 520px;
+            padding: 0 24px;
+            line-height: 1.7;
+            opacity: 0;
+            transform: translateY(8px);
+            position: relative;
+            z-index: 2;
+            animation:
+                introSloganIn 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.2s forwards,
+                sloganGlow 3s ease-in-out 4.7s infinite;
+        }
+
+        /* Shimmer sweep across the slogan */
+        .intro-slogan::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                100deg,
+                transparent 20%,
+                rgba(255, 255, 255, 0.15) 50%,
+                transparent 80%
+            );
+            pointer-events: none;
+            opacity: 0;
+            animation:
+                shimmerShow 0.1s ease 5s forwards,
+                shimmerSweep 2.5s ease-in-out 5s 2;
+        }
+
+        /* ============================================
+           INTRO KEYFRAMES
+           ============================================ */
+        @keyframes introLogoIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+                filter: drop-shadow(0 0 0 rgba(255,255,255,0)) blur(6px);
+            }
+            60% {
+                opacity: 1;
+                filter: drop-shadow(0 0 30px rgba(255,255,255,0.25)) blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: drop-shadow(0 0 18px rgba(255,255,255,0.15)) blur(0);
+            }
+        }
+
+        @keyframes ambientGlow {
+            0%   { opacity: 0; transform: translate(-50%, -55%) scale(0.6); }
+            100% { opacity: 1; transform: translate(-50%, -55%) scale(1); }
+        }
+
+        @keyframes introLineExpand {
+            0%   { width: 0; opacity: 0; }
+            50%  { opacity: 1; }
+            100% { width: 140px; opacity: 1; }
+        }
+
+        @keyframes introSloganIn {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+                letter-spacing: 6px;
+                text-shadow: 0 0 0 rgba(255,255,255,0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 2px;
+                text-shadow: 0 0 20px rgba(255,255,255,0.4);
+            }
+        }
+
+        /* 🌟 ILLUMINATING GLOW — pulsing light effect */
+        @keyframes sloganGlow {
+            0%, 100% {
+                text-shadow:
+                    0 0 10px rgba(255, 255, 255, 0.3),
+                    0 0 20px rgba(255, 255, 255, 0.2),
+                    0 0 30px rgba(255, 255, 255, 0.1);
+                color: var(--off-white);
+            }
+            50% {
+                text-shadow:
+                    0 0 15px rgba(255, 255, 255, 0.6),
+                    0 0 30px rgba(255, 255, 255, 0.4),
+                    0 0 45px rgba(255, 255, 255, 0.25),
+                    0 0 60px rgba(255, 255, 255, 0.15);
+                color: var(--white);
+            }
+        }
+
+        /* Shimmer sweep keyframes */
+        @keyframes shimmerShow {
+            to { opacity: 1; }
+        }
+
+        @keyframes shimmerSweep {
+            0%   { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes introFadeOut {
+            0%   { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+
+        body.intro-playing { overflow: hidden; }
+
+        /* ============================================
+           BACKGROUND & GRAIN
+           ============================================ */
         .bg-image {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -2;
-            background-image: url('_.jpeg');
-            background-size: cover;
-            background-position: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; background-image: url('_.jpeg');
+            background-size: cover; background-position: center;
             background-attachment: fixed;
             filter: brightness(0.35) saturate(0.8);
         }
-
         .bg-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
         }
-
         .grain {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.04;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0.04;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 200px;
+            background-repeat: repeat; background-size: 200px;
         }
 
         /* ============================================
            NAVIGATION
            ============================================ */
         nav {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 1400px;
-            padding: 18px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            border-radius: 100px;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 40px); max-width: 1400px;
+            padding: 18px 40px; display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; border-radius: 100px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(30px) saturate(200%);
             -webkit-backdrop-filter: blur(30px) saturate(200%);
@@ -89,7 +236,6 @@
                         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-
         .logo { display: flex; align-items: center; text-decoration: none; transition: all 0.3s ease; }
         .logo:hover { opacity: 0.85; transform: scale(1.02); }
         .logo img { height: 50px; width: auto; object-fit: contain; display: block; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); }
@@ -121,7 +267,7 @@
         .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
 
         /* ============================================
-           SIDE DRAWER MENU — 🎯 SMALLER & SLEEKER
+           SIDE DRAWER MENU
            ============================================ */
         .drawer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -133,15 +279,13 @@
 
         .side-drawer {
             position: fixed; top: 0; right: -260px;
-            width: 260px;              /* 🎯 reduced from 320px */
-            max-width: 80vw;           /* 🎯 slightly tighter cap */
-            height: 100vh;
+            width: 260px; max-width: 80vw; height: 100vh;
             background: rgba(20, 20, 20, 0.98); backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
             border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 999;
             transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex; flex-direction: column;
-            padding: 90px 28px 28px;   /* 🎯 tighter padding */
+            padding: 90px 28px 28px;
             box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
         }
         .side-drawer.active { right: 0; }
@@ -149,28 +293,24 @@
         .side-drawer .drawer-links li { width: 100%; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
         .side-drawer .drawer-links li:last-child { border-bottom: none; }
         .side-drawer .drawer-links a {
-            display: block;
-            padding: 14px 0;           /* 🎯 tighter vertical padding */
+            display: block; padding: 14px 0;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 13px;           /* 🎯 reduced from 16px */
-            letter-spacing: 2px;       /* 🎯 reduced from 3px */
+            font-size: 13px; letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--white); text-decoration: none; width: 100%;
             transition: all 0.3s ease;
         }
-        .side-drawer .drawer-links a:hover { padding-left: 8px; color: var(--white); text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+        .side-drawer .drawer-links a:hover { padding-left: 8px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
 
         .side-drawer-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
         .side-drawer-footer p {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 9px;            /* 🎯 reduced from 11px */
-            letter-spacing: 2px; color: var(--gray);
+            font-size: 9px; letter-spacing: 2px; color: var(--gray);
             text-transform: uppercase; margin-bottom: 14px;
         }
         .side-drawer-social { display: flex; gap: 12px; }
         .side-drawer-social a {
-            width: 36px; height: 36px; /* 🎯 reduced from 40px */
-            border-radius: 50%;
+            width: 36px; height: 36px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--white); font-size: 14px; text-decoration: none; transition: all 0.3s ease;
@@ -216,7 +356,6 @@
         .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--gray); padding: 10px 20px; border-radius: 100px; background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
 
         .portfolio-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; max-width: 1400px; margin: 0 auto; }
-
         .portfolio-item {
             position: relative; overflow: hidden; cursor: pointer;
             border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
@@ -304,7 +443,7 @@
         .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--gray); font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
 
         /* ============================================
-           📱 MOBILE & TABLET (up to 1024px) — 2 columns
+           📱 MOBILE & TABLET
            ============================================ */
         @media (max-width: 1024px) {
             nav > .nav-links { display: none; }
@@ -322,27 +461,13 @@
             .section-title { font-size: clamp(32px, 8vw, 52px); }
             .section-number { font-size: 11px; padding: 8px 16px; letter-spacing: 2px; }
 
-            /* 🎯 2 PICTURES PER LINE — iPad */
-            .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 14px;
-                max-width: 720px;
-                margin: 0 auto;
-            }
-            .portfolio-item {
-                min-height: 0;
-                aspect-ratio: 1 / 1;
-                border-radius: 12px;
-            }
-            .portfolio-item:nth-child(n) {
-                grid-column: auto;
-                grid-row: auto;
-            }
+            .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 720px; margin: 0 auto; }
+            .portfolio-item { min-height: 0; aspect-ratio: 1 / 1; border-radius: 12px; }
+            .portfolio-item:nth-child(n) { grid-column: auto; grid-row: auto; }
             .portfolio-overlay { opacity: 1; padding: 16px; }
             .portfolio-overlay h3 { font-size: 16px; }
             .portfolio-overlay p { font-size: 9px; letter-spacing: 1.5px; }
 
-            /* About Mobile */
             .about { grid-template-columns: 1fr; gap: 40px; }
             .about-text h2 { font-size: clamp(28px, 7vw, 44px); margin-bottom: 24px; }
             .about-text p { font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
@@ -352,7 +477,6 @@
             .stat-item p { font-size: 9px; letter-spacing: 1.5px; }
             .about-image { height: 320px; }
 
-            /* Services Mobile */
             .services-list { margin-top: 40px; gap: 12px; }
             .service-item { grid-template-columns: 1fr; gap: 8px; padding: 20px 24px; border-radius: 16px; }
             .service-number { font-size: 11px; margin-bottom: 4px; }
@@ -360,7 +484,6 @@
             .service-desc { font-size: 12px; line-height: 1.5; }
             .service-arrow { display: none; }
 
-            /* Contact Mobile */
             .contact h2 { font-size: clamp(36px, 10vw, 56px); }
             .contact-subtitle { font-size: 11px; letter-spacing: 2px; margin-bottom: 40px; }
             .contact-btn { padding: 18px 44px; font-size: 11px; letter-spacing: 2px; }
@@ -371,16 +494,16 @@
             .social-links { gap: 16px; margin-top: 40px; }
             .social-link { width: 48px; height: 48px; font-size: 20px; }
 
-            /* Footer Mobile */
             footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; border-radius: 24px; margin: 0 12px 12px; }
             footer p { font-size: 10px; }
             .footer-links { gap: 16px; flex-wrap: wrap; justify-content: center; }
             .footer-links a { font-size: 10px; }
+
+            .intro-logo { height: 100px; }
+            .intro-slogan { font-size: 15px; max-width: 400px; }
+            .intro-overlay::before { width: 300px; height: 300px; }
         }
 
-        /* ============================================
-           📱 SMALL MOBILE (up to 480px) — 2 columns, tighter
-           ============================================ */
         @media (max-width: 480px) {
             nav { padding: 12px 16px; }
             .logo img { height: 34px; }
@@ -389,14 +512,8 @@
             .hero-subtitle { font-size: 9px; letter-spacing: 3px; padding: 10px 20px; }
             .portfolio, .about, .services, .contact { padding: 60px 20px; }
 
-            /* 🎯 2 PICTURES PER LINE — Mobile */
-            .portfolio-grid {
-                gap: 10px;
-                max-width: 420px;
-            }
-            .portfolio-item {
-                border-radius: 10px;
-            }
+            .portfolio-grid { gap: 10px; max-width: 420px; }
+            .portfolio-item { border-radius: 10px; }
             .portfolio-overlay { padding: 12px; }
             .portfolio-overlay h3 { font-size: 13px; }
             .portfolio-overlay p { font-size: 8px; letter-spacing: 1px; }
@@ -406,26 +523,24 @@
             .stat-item h3 { font-size: 28px; }
             .service-item { padding: 18px 20px; }
             .contact-info-item { padding: 18px 20px; }
+
+            .intro-logo { height: 80px; }
+            .intro-slogan { font-size: 13px; letter-spacing: 1.5px; max-width: 300px; padding: 0 20px; }
+            .intro-overlay::before { width: 240px; height: 240px; }
         }
 
-        /* ============================================
-           📱 TINY PHONES (up to 375px) — 2 columns, compact
-           ============================================ */
         @media (max-width: 375px) {
-            .portfolio-grid {
-                gap: 8px;
-                max-width: 340px;
-            }
+            .portfolio-grid { gap: 8px; max-width: 340px; }
             .portfolio-item { border-radius: 8px; }
             .portfolio-overlay { padding: 10px; }
             .portfolio-overlay h3 { font-size: 12px; }
             .portfolio-overlay p { font-size: 7px; }
             .hero-title { font-size: clamp(38px, 13vw, 56px); }
+
+            .intro-logo { height: 68px; }
+            .intro-slogan { font-size: 12px; }
         }
 
-        /* ============================================
-           📱 TABLET (769px - 1024px)
-           ============================================ */
         @media (min-width: 769px) and (max-width: 1024px) {
             nav { padding: 16px 30px; }
             .hero { padding: 0 40px; }
@@ -436,18 +551,12 @@
             .service-arrow { display: block; }
         }
 
-        /* ============================================
-           🖥️ Touch devices - disable hover effects
-           ============================================ */
         @media (hover: none) {
             .portfolio-overlay { opacity: 1; }
             .portfolio-item img { filter: grayscale(0%) contrast(1); }
             .service-item:hover { transform: none; }
         }
 
-        /* ============================================
-           🌅 Landscape orientation on small devices
-           ============================================ */
         @media (max-height: 500px) and (orientation: landscape) {
             .hero { height: auto; min-height: 100vh; padding: 80px 30px 40px; }
             .hero-title { font-size: clamp(40px, 8vw, 80px); }
@@ -455,7 +564,15 @@
         }
     </style>
 </head>
-<body>
+<body class="intro-playing">
+
+    <!-- 🎬 CINEMATIC INTRO — 11 seconds with illuminating slogan -->
+    <div class="intro-overlay" id="introOverlay">
+        <img src="logo.png" alt="Desfem Studios" class="intro-logo">
+        <div class="intro-line"></div>
+        <p class="intro-slogan">Creating long lasting memories<br>with enthusiasm through lens</p>
+    </div>
+
     <div class="bg-image"></div>
     <div class="bg-overlay"></div>
     <div class="grain"></div>
@@ -474,9 +591,7 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
     </nav>
 
@@ -533,9 +648,7 @@
             <h2 class="section-title">Selected<br>Works</h2>
             <span class="section-number">01 — Portfolio</span>
         </div>
-        <div class="portfolio-grid" id="portfolioGrid">
-            <!-- Loaded dynamically from Firebase -->
-        </div>
+        <div class="portfolio-grid" id="portfolioGrid"></div>
     </section>
 
     <!-- About -->
@@ -624,6 +737,31 @@
     <script src="firebase-config.js"></script>
 
     <script>
+        // ============================================
+        // 🎬 INTRO HANDLER — 11 seconds total
+        // ============================================
+        (function handleIntro() {
+            const intro = document.getElementById('introOverlay');
+            const hasSeenIntro = sessionStorage.getItem('desfem_intro_seen');
+
+            if (hasSeenIntro) {
+                intro.remove();
+                document.body.classList.remove('intro-playing');
+                return;
+            }
+
+            sessionStorage.setItem('desfem_intro_seen', '1');
+
+            // Total duration: 9.5s (fade starts) + 1.8s (fade) = ~11.3s
+            setTimeout(() => {
+                intro.remove();
+                document.body.classList.remove('intro-playing');
+            }, 11300);
+        })();
+
+        // ============================================
+        // FIREBASE + SITE LOGIC
+        // ============================================
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -638,7 +776,6 @@
             drawerOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeDrawer() {
             menuToggle.classList.remove('active');
             sideDrawer.classList.remove('active');
@@ -650,7 +787,6 @@
             if (sideDrawer.classList.contains('active')) closeDrawer();
             else openDrawer();
         });
-
         drawerOverlay.addEventListener('click', closeDrawer);
         drawerLinks.forEach(link => link.addEventListener('click', closeDrawer));
         document.addEventListener('keydown', (e) => {
@@ -664,16 +800,12 @@
                 const featuredItems = [];
                 snapshot.forEach(doc => {
                     const item = doc.data();
-                    if (item.imageUrl && item.featured === true) {
-                        featuredItems.push(item);
-                    }
+                    if (item.imageUrl && item.featured === true) featuredItems.push(item);
                 });
-
                 if (featuredItems.length === 0) {
                     grid.innerHTML = '<p class="empty-state">No featured photos yet — check back soon</p>';
                     return;
                 }
-
                 featuredItems.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'portfolio-item reveal active';
