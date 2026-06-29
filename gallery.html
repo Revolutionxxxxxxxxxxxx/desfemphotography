@@ -82,14 +82,23 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
+        /* 🎨 LOGO IMAGE STYLES */
         .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
             text-decoration: none;
-            color: var(--white);
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            display: block;
         }
 
         .nav-links {
@@ -504,7 +513,7 @@
 
         @media (max-width: 768px) {
             nav { padding: 14px 24px; top: 12px; width: calc(100% - 24px); }
-            .logo { font-size: 12px; }
+            .logo img { height: 36px; }
             .menu-toggle { display: flex; }
 
             .nav-links {
@@ -552,6 +561,7 @@
         @media (max-width: 480px) {
             .gallery-grid { grid-template-columns: 1fr; gap: 16px; }
             .gallery-item { aspect-ratio: 4 / 5; }
+            .logo img { height: 32px; }
         }
 
         /* Touch devices */
@@ -568,7 +578,9 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="index.html" class="logo">Desfem</a>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Desfem Studios Logo">
+        </a>
         <div class="menu-toggle" id="menuToggle">
             <span></span><span></span><span></span>
         </div>
