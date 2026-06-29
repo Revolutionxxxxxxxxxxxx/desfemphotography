@@ -455,6 +455,8 @@
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .portfolio-item {
@@ -515,6 +517,8 @@
             grid-template-columns: 1fr 1fr;
             gap: 80px;
             align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .about-text h2 {
@@ -583,7 +587,7 @@
         /* ============================================
            SERVICES SECTION
            ============================================ */
-        .services { padding: 120px 50px; }
+        .services { padding: 120px 50px; max-width: 1400px; margin: 0 auto; }
 
         .services-list {
             margin-top: 80px;
@@ -626,7 +630,7 @@
         /* ============================================
            CONTACT SECTION
            ============================================ */
-        .contact { padding: 120px 50px; text-align: center; }
+        .contact { padding: 120px 50px; text-align: center; max-width: 1400px; margin: 0 auto; }
 
         .contact h2 {
             font-family: 'Playfair Display', serif;
@@ -842,14 +846,17 @@
                 letter-spacing: 2px;
             }
 
-            /* Portfolio Mobile */
+            /* 🎯 Portfolio Mobile/iPad — constrain width so images don't stretch edge-to-edge */
             .portfolio-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
+                max-width: 680px;
+                margin: 0 auto;
             }
 
             .portfolio-item {
                 min-height: 260px;
+                border-radius: 12px;
             }
 
             .portfolio-item:nth-child(n) {
@@ -969,7 +976,7 @@
         }
 
         /* ============================================
-           📱 SMALL MOBILE (up to 480px) - Extra Compact
+           📱 SMALL MOBILE (up to 480px) — Extra Compact
            ============================================ */
         @media (max-width: 480px) {
             nav {
@@ -999,8 +1006,15 @@
                 padding: 60px 20px;
             }
 
+            /* 🎯 Mobile — tighter portfolio grid */
+            .portfolio-grid {
+                gap: 14px;
+                max-width: 360px;
+            }
+
             .portfolio-item {
                 min-height: 240px;
+                border-radius: 10px;
             }
 
             .about-image {
@@ -1021,6 +1035,23 @@
 
             .contact-info-item {
                 padding: 18px 20px;
+            }
+        }
+
+        /* ============================================
+           📱 TINY PHONES (up to 375px) — iPhone SE etc.
+           ============================================ */
+        @media (max-width: 375px) {
+            .portfolio-grid {
+                max-width: 300px;
+            }
+
+            .portfolio-item {
+                min-height: 220px;
+            }
+
+            .hero-title {
+                font-size: clamp(38px, 13vw, 56px);
             }
         }
 
