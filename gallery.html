@@ -61,7 +61,9 @@
             background-size: 200px;
         }
 
-        /* Navigation */
+        /* ============================================
+           NAVIGATION
+           ============================================ */
         nav {
             position: fixed;
             top: 20px;
@@ -80,18 +82,19 @@
             -webkit-backdrop-filter: blur(30px) saturate(200%);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
         }
 
-        /* 🎨 LOGO IMAGE STYLES */
         .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .logo:hover {
-            opacity: 0.8;
+            opacity: 0.85;
+            transform: scale(1.02);
         }
 
         .logo img {
@@ -99,8 +102,10 @@
             width: auto;
             object-fit: contain;
             display: block;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
+        /* Desktop Nav Links */
         .nav-links {
             display: flex;
             gap: 40px;
@@ -116,40 +121,212 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             position: relative;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 8px 0;
         }
 
-        .nav-links a.active::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
             height: 1px;
             background: var(--white);
+            transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Menu Toggle Button */
         .menu-toggle {
             display: none;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
             cursor: pointer;
-            padding: 8px;
-            z-index: 1001;
+            padding: 10px;
+            z-index: 1002;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .menu-toggle span {
-            width: 24px;
+            width: 26px;
             height: 2px;
             background: var(--white);
             transition: all 0.3s ease;
+            border-radius: 2px;
+            display: block;
         }
 
-        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .menu-toggle.active span:nth-child(2) { opacity: 0; }
-        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
 
-        /* Gallery Hero */
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ============================================
+           SIDE DRAWER MENU
+           ============================================ */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            max-width: 85vw;
+            height: 100vh;
+            background: rgba(20, 20, 20, 0.98);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 999;
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            padding: 100px 40px 40px;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .side-drawer.active {
+            right: 0;
+        }
+
+        .side-drawer .drawer-links {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .side-drawer .drawer-links li {
+            width: 100%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .side-drawer .drawer-links li:last-child {
+            border-bottom: none;
+        }
+
+        .side-drawer .drawer-links a {
+            display: block;
+            padding: 20px 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--white);
+            text-decoration: none;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .side-drawer .drawer-links a:hover {
+            padding-left: 10px;
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .side-drawer .drawer-links a.active {
+            color: var(--white);
+            padding-left: 10px;
+        }
+
+        .side-drawer-footer {
+            margin-top: auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-drawer-footer p {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .side-drawer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .side-drawer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--white);
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .side-drawer-social a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .side-drawer-social a.whatsapp:hover {
+            background: #25D366;
+            border-color: #25D366;
+        }
+
+        .side-drawer-social a.instagram:hover {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-color: transparent;
+        }
+
+        /* ============================================
+           GALLERY HERO
+           ============================================ */
         .gallery-hero {
             min-height: 60vh;
             display: flex;
@@ -185,7 +362,9 @@
             line-height: 1.8;
         }
 
-        /* Filter Buttons */
+        /* ============================================
+           FILTER BUTTONS
+           ============================================ */
         .filter-container {
             padding: 0 50px;
             margin-bottom: 60px;
@@ -223,7 +402,9 @@
             border-color: var(--white);
         }
 
-        /* Gallery Grid */
+        /* ============================================
+           GALLERY GRID
+           ============================================ */
         .gallery-section {
             padding: 0 50px 120px;
         }
@@ -330,7 +511,9 @@
             text-transform: uppercase;
         }
 
-        /* ============ LIGHTBOX ============ */
+        /* ============================================
+           LIGHTBOX
+           ============================================ */
         .lightbox {
             position: fixed;
             inset: 0;
@@ -469,7 +652,9 @@
             color: var(--gray);
         }
 
-        /* Footer */
+        /* ============================================
+           FOOTER
+           ============================================ */
         footer {
             padding: 30px 50px;
             margin: 0 20px 20px;
@@ -479,7 +664,9 @@
             align-items: center;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         footer p {
@@ -506,68 +693,212 @@
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* ============ RESPONSIVE ============ */
+        /* ============================================
+           📱 MOBILE & TABLET (up to 1024px)
+           ============================================ */
         @media (max-width: 1024px) {
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            nav { padding: 14px 24px; top: 12px; width: calc(100% - 24px); }
-            .logo img { height: 36px; }
-            .menu-toggle { display: flex; }
-
-            .nav-links {
-                position: fixed;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0, 0, 0, 0.97);
-                backdrop-filter: blur(30px);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 32px;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.4s ease;
-                z-index: 999;
+            /* Hide desktop nav, show hamburger */
+            nav > .nav-links {
+                display: none;
             }
 
-            .nav-links.open { opacity: 1; pointer-events: all; }
-            .nav-links a { font-size: 16px; letter-spacing: 3px; }
+            .menu-toggle {
+                display: flex;
+            }
 
-            .gallery-hero { padding: 120px 20px 40px; min-height: 40vh; }
-            .gallery-hero h1 { font-size: clamp(40px, 12vw, 80px); }
-            .gallery-hero p { font-size: 11px; letter-spacing: 3px; }
+            nav {
+                padding: 16px 24px;
+                top: 12px;
+                width: calc(100% - 24px);
+            }
 
-            .filter-container { padding: 0 20px; margin-bottom: 40px; gap: 8px; }
-            .filter-btn { padding: 10px 20px; font-size: 10px; letter-spacing: 1.5px; }
+            .logo img {
+                height: 40px;
+            }
 
-            .gallery-section { padding: 0 20px 80px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            /* Gallery Hero - Compact */
+            .gallery-hero {
+                padding: 110px 24px 40px;
+                min-height: 45vh;
+            }
 
-            .gallery-item-overlay { opacity: 1; padding: 16px; }
-            .gallery-item-overlay h3 { font-size: 14px; }
-            .gallery-item-overlay p { font-size: 9px; }
-            .gallery-item-overlay .view-icon { display: none; }
+            .gallery-hero h1 {
+                font-size: clamp(38px, 10vw, 72px);
+                letter-spacing: -2px;
+                margin-bottom: 16px;
+            }
 
-            .lightbox-nav { width: 44px; height: 44px; font-size: 16px; }
+            .gallery-hero p {
+                font-size: 10px;
+                letter-spacing: 3px;
+                line-height: 1.7;
+            }
+
+            /* Filter Buttons - Compact */
+            .filter-container {
+                padding: 0 20px;
+                margin-bottom: 40px;
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 10px 18px;
+                font-size: 10px;
+                letter-spacing: 1.5px;
+            }
+
+            /* Gallery Grid - Compact */
+            .gallery-section {
+                padding: 0 20px 80px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .gallery-item-overlay {
+                opacity: 1;
+                padding: 16px;
+            }
+
+            .gallery-item-overlay h3 {
+                font-size: 14px;
+            }
+
+            .gallery-item-overlay p {
+                font-size: 9px;
+            }
+
+            .gallery-item-overlay .view-icon {
+                display: none;
+            }
+
+            /* Lightbox - Compact */
+            .lightbox-nav {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+
             .lightbox-prev { left: 10px; }
             .lightbox-next { right: 10px; }
-            .lightbox-close { top: 15px; right: 15px; width: 44px; height: 44px; }
 
-            footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; border-radius: 24px; margin: 0 10px 10px; }
+            .lightbox-close {
+                top: 15px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .lightbox-info h3 {
+                font-size: 20px;
+            }
+
+            .lightbox-info p {
+                font-size: 10px;
+                letter-spacing: 2px;
+            }
+
+            /* Footer - Compact */
+            footer {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+                padding: 24px 20px;
+                border-radius: 24px;
+                margin: 0 12px 12px;
+            }
+
+            footer p { font-size: 10px; }
             .footer-links { gap: 16px; flex-wrap: wrap; justify-content: center; }
+            .footer-links a { font-size: 10px; }
         }
 
+        /* ============================================
+           📱 SMALL MOBILE (up to 480px) - Extra Compact
+           ============================================ */
         @media (max-width: 480px) {
-            .gallery-grid { grid-template-columns: 1fr; gap: 16px; }
-            .gallery-item { aspect-ratio: 4 / 5; }
-            .logo img { height: 32px; }
+            nav {
+                padding: 12px 16px;
+            }
+
+            .logo img {
+                height: 34px;
+            }
+
+            .gallery-hero {
+                padding: 100px 20px 32px;
+                min-height: 40vh;
+            }
+
+            .gallery-hero h1 {
+                font-size: clamp(34px, 11vw, 56px);
+                letter-spacing: -1px;
+            }
+
+            .gallery-hero p {
+                font-size: 9px;
+                letter-spacing: 2.5px;
+            }
+
+            .filter-container {
+                padding: 0 16px;
+                margin-bottom: 32px;
+                gap: 6px;
+            }
+
+            .filter-btn {
+                padding: 8px 14px;
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .gallery-section {
+                padding: 0 16px 60px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .gallery-item {
+                aspect-ratio: 4 / 5;
+            }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .lightbox-close {
+                width: 40px;
+                height: 40px;
+            }
         }
 
-        /* Touch devices */
+        /* ============================================
+           🖥️ Touch devices - disable hover effects
+           ============================================ */
         @media (hover: none) {
             .gallery-item img { filter: grayscale(0%) contrast(1); }
             .gallery-item-overlay { opacity: 1; }
+        }
+
+        /* ============================================
+           🌅 Landscape orientation on small devices
+           ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .gallery-hero {
+                min-height: auto;
+                padding: 100px 30px 30px;
+            }
+
+            .gallery-hero h1 {
+                font-size: clamp(36px, 7vw, 60px);
+            }
         }
     </style>
 </head>
@@ -581,18 +912,42 @@
         <a href="index.html" class="logo">
             <img src="logo.png" alt="Desfem Studios Logo">
         </a>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span><span></span><span></span>
-        </div>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
             <li><a href="index.html#work">Work</a></li>
             <li><a href="index.html#about">About</a></li>
             <li><a href="index.html#services">Services</a></li>
-            <li><a href="index.html#reviews">Reviews</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
             <li><a href="index.html#contact">Contact</a></li>
             <li><a href="gallery.html" class="active">Gallery</a></li>
         </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
+
+    <!-- Side Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Side Drawer Menu -->
+    <div class="side-drawer" id="sideDrawer">
+        <ul class="drawer-links">
+            <li><a href="index.html#work">Work</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+        </ul>
+        <div class="side-drawer-footer">
+            <p>Follow Us</p>
+            <div class="side-drawer-social">
+                <a href="https://wa.me/2348077784875?text=Hello%20Desfem%20Studios%2C%20I%27d%20like%20to%20inquire%20about%20your%20photography%20services." target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://instagram.com/desfem_photography" target="_blank" class="instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
 
     <!-- Gallery Hero -->
     <section class="gallery-hero">
@@ -662,23 +1017,54 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Mobile Menu
+        // ============================================
+        // SIDE DRAWER MENU
+        // ============================================
         const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const drawerLinks = document.querySelectorAll('.side-drawer .drawer-links a');
+
+        function openDrawer() {
+            menuToggle.classList.add('active');
+            sideDrawer.classList.add('active');
+            drawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            menuToggle.classList.remove('active');
+            sideDrawer.classList.remove('active');
+            drawerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('open');
+            if (sideDrawer.classList.contains('active')) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
         });
 
-        navLinks.querySelectorAll('a').forEach(link => {
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        drawerLinks.forEach(link => {
             link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('open');
+                closeDrawer();
             });
         });
 
-        // Reveal on scroll
+        // Close drawer on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sideDrawer.classList.contains('active')) {
+                closeDrawer();
+            }
+        });
+
+        // ============================================
+        // REVEAL ON SCROLL
+        // ============================================
         const reveals = document.querySelectorAll('.reveal');
         const revealOnScroll = () => {
             reveals.forEach(el => {
@@ -690,7 +1076,9 @@
         window.addEventListener('scroll', revealOnScroll);
         window.addEventListener('load', revealOnScroll);
 
-        // ============ GALLERY DATA ============
+        // ============================================
+        // GALLERY DATA
+        // ============================================
         let galleryItems = [];
         let currentFilter = 'all';
         let currentIndex = 0;
@@ -768,7 +1156,9 @@
             });
         });
 
-        // ============ LIGHTBOX ============
+        // ============================================
+        // LIGHTBOX
+        // ============================================
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightboxImage');
         const lightboxTitle = document.getElementById('lightboxTitle');
