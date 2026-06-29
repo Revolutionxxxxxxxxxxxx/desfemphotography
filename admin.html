@@ -6,7 +6,6 @@
     <title>Desfem Admin Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Cloudinary Upload Widget -->
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,6 +18,7 @@
             --accent: #ffffff;
             --danger: #ff4444;
             --success: #00cc66;
+            --gold: #FFD700;
         }
         body {
             background: var(--bg);
@@ -89,6 +89,59 @@
 
         .form-group textarea { resize: vertical; min-height: 100px; }
 
+        /* Featured Checkbox */
+        .featured-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .featured-toggle:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .featured-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        .featured-toggle .toggle-label {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .featured-toggle .toggle-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .featured-toggle .toggle-desc {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+        }
+
+        .featured-toggle .star-icon {
+            font-size: 20px;
+            color: var(--gold);
+        }
+
         .btn {
             padding: 14px 28px;
             border-radius: 10px;
@@ -120,6 +173,26 @@
         }
 
         .btn-danger:hover { background: var(--danger); color: white; }
+
+        .btn-star {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-star:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .btn-star.featured {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
 
         .btn-secondary {
             background: transparent;
@@ -278,6 +351,11 @@
             border-radius: 12px;
         }
 
+        .item-row.featured-item {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.03);
+        }
+
         .item-row img {
             width: 80px;
             height: 80px;
@@ -287,6 +365,21 @@
 
         .item-info h4 { font-size: 15px; margin-bottom: 4px; }
         .item-info p { font-size: 12px; color: var(--muted); }
+
+        .featured-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--gold);
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
 
         .item-actions { display: flex; gap: 8px; }
 
@@ -325,33 +418,6 @@
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Diagnostic Panel */
-        .diagnostic-panel {
-            background: rgba(0, 100, 255, 0.1);
-            border: 1px solid #0066ff;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .diagnostic-panel h4 {
-            color: #0066ff;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .diagnostic-panel code {
-            background: rgba(0,0,0,0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .status-ok { color: var(--success); }
-        .status-error { color: var(--danger); }
 
         @media (max-width: 768px) {
             .admin-header { padding: 16px 20px; flex-direction: column; gap: 12px; }
@@ -400,7 +466,6 @@
             <div class="tabs">
                 <button class="tab active" data-tab="portfolio">Portfolio</button>
                 <button class="tab" data-tab="reviews">Reviews</button>
-                <button class="tab" data-tab="diagnostic">🔧 Diagnostic</button>
             </div>
 
             <!-- PORTFOLIO TAB -->
@@ -408,13 +473,11 @@
                 <div class="panel">
                     <h3>Add New Photo</h3>
 
-                    <!-- Cloudinary Upload Button -->
                     <button class="upload-btn-cloudinary" id="cloudinaryUploadBtn">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span>Click to Upload Photo</span>
                     </button>
 
-                    <!-- Preview of selected image -->
                     <img class="preview-img" id="previewImg" alt="Preview">
 
                     <div class="form-row">
@@ -425,11 +488,13 @@
                         <div class="form-group">
                             <label>Category</label>
                             <select id="photoCategory">
-                                <option value="Editorials">Editorials</option>
-                                <option value="Portraits">portraits</option>
-                                <option value="Weddings">Weddings</option>
-                                <option value="Corprates">Corprates</option>
-                                <option value="Premium Visual Storytelling">Premium Visual Storytelling</option>
+                                <option value="Editorial">Editorial</option>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Architecture">Architecture</option>
+                                <option value="Still Life">Still Life</option>
+                                <option value="Landscape">Landscape</option>
                             </select>
                         </div>
                     </div>
@@ -443,11 +508,25 @@
                             <input type="number" id="photoOrder" placeholder="1" value="1">
                         </div>
                     </div>
+
+                    <!-- ⭐ FEATURED TOGGLE -->
+                    <label class="featured-toggle" for="featuredCheck">
+                        <input type="checkbox" id="featuredCheck">
+                        <div class="toggle-label">
+                            <span class="toggle-title">⭐ Feature on Homepage</span>
+                            <span class="toggle-desc">Show this photo in the "Selected Works" section on the main page</span>
+                        </div>
+                        <i class="fas fa-star star-icon"></i>
+                    </label>
+
                     <button class="btn btn-primary" id="publishBtn" disabled>Publish to Site</button>
                 </div>
 
                 <div class="panel">
                     <h3>Current Portfolio</h3>
+                    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">
+                        Click the ⭐ star to feature/unfeature photos on the homepage.
+                    </p>
                     <div class="items-list" id="portfolioList"></div>
                 </div>
             </div>
@@ -492,15 +571,6 @@
                     <div class="items-list" id="reviewsList"></div>
                 </div>
             </div>
-
-            <!-- DIAGNOSTIC TAB -->
-            <div class="tab-content" id="diagnosticTab">
-                <div class="panel">
-                    <h3>🔧 System Diagnostic</h3>
-                    <div id="diagnosticResults"></div>
-                    <button class="btn btn-primary" id="runDiagnosticBtn" style="margin-top:20px;">Run Diagnostic Test</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -521,7 +591,6 @@
             uploadPreset: 'desfem_uploads'
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -537,7 +606,6 @@
                 document.getElementById('currentUserEmail').textContent = user.email;
                 loadPortfolioList();
                 loadReviewsList();
-                runDiagnostic(); // Auto-run diagnostic on login
             } else {
                 loginScreen.style.display = 'flex';
                 dashboard.classList.remove('active');
@@ -579,65 +647,8 @@
             const toast = document.getElementById('toast');
             toast.textContent = msg;
             toast.className = 'toast show ' + type;
-            setTimeout(() => toast.classList.remove('show'), 4000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
-
-        // ============ DIAGNOSTIC ============
-        function runDiagnostic() {
-            const results = document.getElementById('diagnosticResults');
-            if (!results) return;
-
-            let html = '<div class="diagnostic-panel"><h4>System Status</h4>';
-
-            // Check 1: Cloudinary library loaded
-            const cloudinaryLoaded = typeof cloudinary !== 'undefined';
-            html += `<p><strong>Cloudinary Library:</strong> <span class="${cloudinaryLoaded ? 'status-ok' : 'status-error'}">${cloudinaryLoaded ? '✅ Loaded' : '❌ Not loaded'}</span></p>`;
-
-            // Check 2: Cloud Name
-            const cloudNameValid = CLOUDINARY_CONFIG.cloudName && CLOUDINARY_CONFIG.cloudName !== 'YOUR_CLOUD_NAME';
-            html += `<p><strong>Cloud Name:</strong> <code>${CLOUDINARY_CONFIG.cloudName}</code> <span class="${cloudNameValid ? 'status-ok' : 'status-error'}">${cloudNameValid ? '✅ Set' : '❌ Not set'}</span></p>`;
-
-            // Check 3: Upload Preset
-            const presetValid = CLOUDINARY_CONFIG.uploadPreset && CLOUDINARY_CONFIG.uploadPreset !== 'YOUR_PRESET';
-            html += `<p><strong>Upload Preset:</strong> <code>${CLOUDINARY_CONFIG.uploadPreset}</code> <span class="${presetValid ? 'status-ok' : 'status-error'}">${presetValid ? '✅ Set' : '❌ Not set'}</span></p>`;
-
-            // Check 4: Firebase
-            const firebaseLoaded = typeof firebase !== 'undefined';
-            html += `<p><strong>Firebase:</strong> <span class="${firebaseLoaded ? 'status-ok' : 'status-error'}">${firebaseLoaded ? '✅ Loaded' : '❌ Not loaded'}</span></p>`;
-
-            // Check 5: User logged in
-            const userLoggedIn = !!firebase.auth().currentUser;
-            html += `<p><strong>User Logged In:</strong> <span class="${userLoggedIn ? 'status-ok' : 'status-error'}">${userLoggedIn ? '✅ Yes' : '❌ No'}</span></p>`;
-
-            html += '</div>';
-
-            if (!cloudinaryLoaded || !cloudNameValid || !presetValid) {
-                html += `<div class="diagnostic-panel" style="background:rgba(255,68,68,0.1); border-color:var(--danger);">
-                    <h4 style="color:var(--danger);">⚠️ Setup Required</h4>
-                    <p><strong>To fix Cloudinary uploads:</strong></p>
-                    <ol style="margin-left:20px; line-height:2;">
-                        <li>Go to <a href="https://cloudinary.com" target="_blank" style="color:var(--accent);">cloudinary.com</a> → Login</li>
-                        <li>Click ⚙️ <strong>Settings</strong> (top right)</li>
-                        <li>Click <strong>Upload</strong> tab</li>
-                        <li>Scroll to <strong>Upload presets</strong> → Click <strong>Add upload preset</strong></li>
-                        <li>Set <strong>Preset name</strong>: <code>desfem_uploads</code></li>
-                        <li>⚠️ CRITICAL: Set <strong>Signing Mode</strong> to <strong style="color:#ff4444">Unsigned</strong></li>
-                        <li>Click <strong>Save</strong></li>
-                        <li>Refresh this page and try again</li>
-                    </ol>
-                </div>`;
-            } else {
-                html += `<div class="diagnostic-panel" style="background:rgba(0,204,102,0.1); border-color:var(--success);">
-                    <h4 style="color:var(--success);">✅ All Systems Ready</h4>
-                    <p>Everything looks good! Try uploading a photo in the Portfolio tab.</p>
-                    <p style="margin-top:10px;"><strong>If uploads still fail:</strong> The most common issue is that the upload preset is set to "Signed" instead of "Unsigned". Go to Cloudinary Settings → Upload → Upload presets → Edit your preset → Change Signing Mode to "Unsigned".</p>
-                </div>`;
-            }
-
-            results.innerHTML = html;
-        }
-
-        document.getElementById('runDiagnosticBtn')?.addEventListener('click', runDiagnostic);
 
         // ============ CLOUDINARY UPLOAD ============
         let uploadedImageUrl = null;
@@ -645,80 +656,51 @@
         const publishBtn = document.getElementById('publishBtn');
 
         document.getElementById('cloudinaryUploadBtn').addEventListener('click', () => {
-            console.log('Upload button clicked');
-            console.log('Cloudinary object:', typeof cloudinary);
-            console.log('Config:', CLOUDINARY_CONFIG);
-
-            if (typeof cloudinary === 'undefined') {
-                showToast('❌ Cloudinary library not loaded. Check your internet connection.', 'error');
+            if (CLOUDINARY_CONFIG.cloudName === 'YOUR_CLOUD_NAME') {
+                showToast('Please configure Cloudinary first!', 'error');
                 return;
             }
 
-            if (!CLOUDINARY_CONFIG.cloudName || CLOUDINARY_CONFIG.cloudName === 'YOUR_CLOUD_NAME') {
-                showToast('❌ Cloud Name not configured. Check the Diagnostic tab.', 'error');
-                return;
-            }
-
-            if (!CLOUDINARY_CONFIG.uploadPreset || CLOUDINARY_CONFIG.uploadPreset === 'YOUR_PRESET') {
-                showToast('❌ Upload Preset not configured. Check the Diagnostic tab.', 'error');
-                return;
-            }
-
-            try {
-                const widget = cloudinary.createUploadWidget({
-                    cloudName: CLOUDINARY_CONFIG.cloudName,
-                    uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
-                    sources: ['local', 'camera', 'url'],
-                    multiple: false,
-                    maxFileSize: 10000000,
-                    cropping: false,
-                    clientAllowedFormats: ['jpg', 'png', 'webp', 'jpeg'],
-                    styles: {
-                        palette: {
-                            window: "#141414",
-                            windowBorder: "#2a2a2a",
-                            tabIcon: "#ffffff",
-                            menuIcons: "#888888",
-                            textDark: "#ffffff",
-                            textLight: "#888888",
-                            link: "#ffffff",
-                            action: "#ffffff",
-                            inactiveTabIcon: "#888888",
-                            error: "#ff4444",
-                            inProgress: "#ffffff",
-                            complete: "#00cc66",
-                            sourceBg: "#0a0a0a"
-                        }
+            const widget = cloudinary.createUploadWidget({
+                cloudName: CLOUDINARY_CONFIG.cloudName,
+                uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
+                sources: ['local', 'camera', 'url'],
+                multiple: false,
+                maxFileSize: 10000000,
+                cropping: false,
+                clientAllowedFormats: ['jpg', 'png', 'webp', 'jpeg'],
+                styles: {
+                    palette: {
+                        window: "#141414",
+                        windowBorder: "#2a2a2a",
+                        tabIcon: "#ffffff",
+                        menuIcons: "#888888",
+                        textDark: "#ffffff",
+                        textLight: "#888888",
+                        link: "#ffffff",
+                        action: "#ffffff",
+                        inactiveTabIcon: "#888888",
+                        error: "#ff4444",
+                        inProgress: "#ffffff",
+                        complete: "#00cc66",
+                        sourceBg: "#0a0a0a"
                     }
-                }, (error, result) => {
-                    console.log('Cloudinary callback:', { error, result });
+                }
+            }, (error, result) => {
+                if (!error && result && result.event === 'success') {
+                    uploadedImageUrl = result.info.secure_url;
+                    previewImg.src = uploadedImageUrl;
+                    previewImg.style.display = 'block';
+                    publishBtn.disabled = false;
+                    showToast('Image uploaded! Fill in details and publish.', 'success');
+                    console.log('Cloudinary URL:', uploadedImageUrl);
+                } else if (error) {
+                    console.error('Cloudinary error:', error);
+                    showToast('Upload failed: ' + (error.message || 'Unknown error'), 'error');
+                }
+            });
 
-                    if (error) {
-                        console.error('Cloudinary error:', error);
-                        showToast('Upload error: ' + (error.message || JSON.stringify(error)), 'error');
-                        return;
-                    }
-
-                    if (result && result.event === 'success') {
-                        console.log('Upload success:', result.info);
-                        uploadedImageUrl = result.info.secure_url;
-                        previewImg.src = uploadedImageUrl;
-                        previewImg.style.display = 'block';
-                        publishBtn.disabled = false;
-                        showToast('✅ Image uploaded! Fill in details and publish.', 'success');
-                    } else if (result && result.event === 'close') {
-                        console.log('Widget closed');
-                    } else if (result) {
-                        console.log('Other event:', result.event, result);
-                    }
-                });
-
-                console.log('Opening widget...');
-                widget.open();
-            } catch (err) {
-                console.error('Widget creation error:', err);
-                showToast('Failed to open upload widget: ' + err.message, 'error');
-            }
+            widget.open();
         });
 
         // ============ PUBLISH TO FIREBASE ============
@@ -732,6 +714,7 @@
             const category = document.getElementById('photoCategory').value;
             const year = document.getElementById('photoYear').value.trim();
             const order = parseInt(document.getElementById('photoOrder').value) || 1;
+            const featured = document.getElementById('featuredCheck').checked;
 
             if (!title || !year) {
                 showToast('Please fill in title and year', 'error');
@@ -747,17 +730,23 @@
                     category,
                     year,
                     order,
+                    featured,  // ← Save featured status
                     imageUrl: uploadedImageUrl,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                showToast('Photo published to site!', 'success');
+                const msg = featured 
+                    ? 'Photo published & featured on homepage!' 
+                    : 'Photo published to gallery!';
+                showToast(msg, 'success');
 
+                // Reset form
                 uploadedImageUrl = null;
                 previewImg.style.display = 'none';
                 document.getElementById('photoTitle').value = '';
                 document.getElementById('photoYear').value = '';
                 document.getElementById('photoOrder').value = '1';
+                document.getElementById('featuredCheck').checked = false;
                 publishBtn.disabled = true;
             } catch (err) {
                 console.error(err);
@@ -779,15 +768,24 @@
                 }
                 snapshot.forEach(doc => {
                     const d = doc.data();
+                    const isFeatured = d.featured === true;
                     const row = document.createElement('div');
-                    row.className = 'item-row';
+                    row.className = 'item-row' + (isFeatured ? ' featured-item' : '');
                     row.innerHTML = `
                         <img src="${d.imageUrl}" alt="${d.title}">
                         <div class="item-info">
-                            <h4>${d.title}</h4>
+                            <h4>
+                                ${d.title}
+                                ${isFeatured ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
+                            </h4>
                             <p>${d.category} • ${d.year} • Order: ${d.order}</p>
                         </div>
                         <div class="item-actions">
+                            <button class="btn btn-star ${isFeatured ? 'featured' : ''}" 
+                                    onclick="toggleFeatured('${doc.id}', ${!isFeatured})" 
+                                    title="${isFeatured ? 'Remove from homepage' : 'Feature on homepage'}">
+                                <i class="fas fa-star"></i>
+                            </button>
                             <button class="btn btn-danger" onclick="deletePortfolio('${doc.id}')">Delete</button>
                         </div>
                     `;
@@ -795,6 +793,16 @@
                 });
             });
         }
+
+        // ============ TOGGLE FEATURED STATUS ============
+        window.toggleFeatured = async (id, featured) => {
+            try {
+                await db.collection('portfolio').doc(id).update({ featured: featured });
+                showToast(featured ? '⭐ Featured on homepage!' : 'Removed from homepage', 'success');
+            } catch (err) {
+                showToast('Failed: ' + err.message, 'error');
+            }
+        };
 
         window.deletePortfolio = async (id) => {
             if (!confirm('Delete this photo?')) return;
