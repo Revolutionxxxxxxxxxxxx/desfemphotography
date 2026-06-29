@@ -180,9 +180,9 @@
         .side-drawer {
             position: fixed;
             top: 0;
-            right: -320px;
-            width: 320px;
-            max-width: 85vw;
+            right: -280px;
+            width: 280px;
+            max-width: 75vw;
             height: 100vh;
             background: rgba(20, 20, 20, 0.98);
             backdrop-filter: blur(30px) saturate(180%);
@@ -192,7 +192,7 @@
             transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
-            padding: 100px 40px 40px;
+            padding: 80px 24px 30px;
             box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
         }
 
@@ -214,10 +214,10 @@
 
         .side-drawer .drawer-links a {
             display: block;
-            padding: 20px 0;
+            padding: 16px 0;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            letter-spacing: 3px;
+            font-size: 13px;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
             color: var(--white);
             text-decoration: none;
@@ -225,28 +225,28 @@
             transition: all 0.3s ease;
         }
 
-        .side-drawer .drawer-links a:hover { padding-left: 10px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
-        .side-drawer .drawer-links a.active { padding-left: 10px; }
+        .side-drawer .drawer-links a:hover { padding-left: 8px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+        .side-drawer .drawer-links a.active { padding-left: 8px; }
 
         .side-drawer-footer {
             margin-top: auto;
-            padding-top: 40px;
+            padding-top: 24px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .side-drawer-footer p {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 2px;
             color: var(--gray);
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
-        .side-drawer-social { display: flex; gap: 16px; }
+        .side-drawer-social { display: flex; gap: 12px; }
 
         .side-drawer-social a {
-            width: 40px; height: 40px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -254,7 +254,7 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--white);
-            font-size: 16px;
+            font-size: 14px;
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -341,7 +341,6 @@
             margin: 0 auto;
         }
 
-        /* Photo items — square */
         .gallery-item {
             position: relative;
             overflow: hidden;
@@ -354,7 +353,6 @@
             background: #000;
         }
 
-        /* 🎬 Video items — natural aspect ratio */
         .gallery-item.video-item {
             aspect-ratio: auto;
             min-height: 220px;
@@ -364,7 +362,6 @@
             justify-content: center;
         }
 
-        /* Photos — cover the square */
         .gallery-item img {
             width: 100%;
             height: 100%;
@@ -373,7 +370,6 @@
             filter: grayscale(80%) contrast(1.1);
         }
 
-        /* 🎬 Videos — show full frame, no cropping */
         .gallery-item video {
             width: 100%;
             height: 100%;
@@ -419,7 +415,6 @@
             color: var(--gray);
         }
 
-        /* Play/View Icon */
         .gallery-item-overlay .view-icon {
             position: absolute;
             top: 20px;
@@ -445,7 +440,6 @@
 
         .gallery-item:hover .view-icon { transform: scale(1); }
 
-        /* Video Badge */
         .video-badge {
             position: absolute;
             top: 8px;
@@ -662,19 +656,16 @@
             
             .gallery-section { padding: 0 16px 80px; }
             
-            /* 📱 4 COLUMNS on tablet */
             .gallery-grid { 
                 grid-template-columns: repeat(4, 1fr); 
                 gap: 8px; 
             }
             
-            /* Photos: 1:1 square */
             .gallery-item {
                 aspect-ratio: 1 / 1;
                 border-radius: 10px;
             }
             
-            /* Videos: span 2 columns for visibility */
             .gallery-item.video-item { 
                 grid-column: span 2;
                 aspect-ratio: 16 / 9;
@@ -682,7 +673,6 @@
                 min-height: auto;
             }
             
-            /* Smaller overlays on tablet */
             .gallery-item-overlay { 
                 opacity: 1; 
                 padding: 10px; 
@@ -697,7 +687,6 @@
             }
             .gallery-item-overlay .view-icon { display: none; }
             
-            /* Lightbox stays large */
             .lightbox-nav { width: 44px; height: 44px; font-size: 16px; }
             .lightbox-prev { left: 10px; }
             .lightbox-next { right: 10px; }
@@ -727,19 +716,16 @@
             
             .gallery-section { padding: 0 12px 60px; }
             
-            /* 📱 4 COLUMNS on mobile */
             .gallery-grid { 
                 grid-template-columns: repeat(4, 1fr); 
                 gap: 6px; 
             }
             
-            /* Photos: 1:1 square */
             .gallery-item {
                 aspect-ratio: 1 / 1;
                 border-radius: 8px;
             }
             
-            /* Videos: span 2 columns */
             .gallery-item.video-item { 
                 grid-column: span 2;
                 aspect-ratio: 16 / 9;
@@ -747,7 +733,6 @@
                 min-height: auto;
             }
             
-            /* Even smaller overlays on mobile */
             .gallery-item-overlay { 
                 opacity: 1; 
                 padding: 6px; 
@@ -760,10 +745,9 @@
             .gallery-item-overlay p { 
                 font-size: 7px; 
                 letter-spacing: 0.5px;
-                display: none; /* hide on mobile - too small */
+                display: none;
             }
             
-            /* Smaller video badge */
             .video-badge {
                 top: 4px;
                 left: 4px;
@@ -772,7 +756,6 @@
             }
             .video-badge i { font-size: 7px; }
             
-            /* Lightbox stays full size */
             .lightbox-nav { width: 40px; height: 40px; font-size: 14px; }
             .lightbox-close { width: 40px; height: 40px; }
             .lightbox-media-wrapper video { width: 95vw; }
@@ -868,9 +851,7 @@
             <i class="fas fa-chevron-right"></i>
         </button>
         <div class="lightbox-content">
-            <div class="lightbox-media-wrapper" id="lightboxMediaWrapper">
-                <!-- Image or video inserted dynamically -->
-            </div>
+            <div class="lightbox-media-wrapper" id="lightboxMediaWrapper"></div>
             <div class="lightbox-info">
                 <h3 id="lightboxTitle"></h3>
                 <p id="lightboxMeta"></p>
