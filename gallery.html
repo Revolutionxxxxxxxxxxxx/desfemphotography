@@ -448,25 +448,25 @@
         /* Video Badge */
         .video-badge {
             position: absolute;
-            top: 16px;
-            left: 16px;
-            padding: 6px 12px;
+            top: 8px;
+            left: 8px;
+            padding: 4px 8px;
             background: rgba(255, 59, 48, 0.95);
             color: var(--white);
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 10px;
+            font-size: 8px;
             font-weight: 600;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             z-index: 2;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .video-badge i { font-size: 10px; }
+        .video-badge i { font-size: 8px; }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -645,7 +645,7 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* ============================================
-           📱 TABLET & iPad (up to 1024px)
+           📱 TABLET & iPad (up to 1024px) - 4 per row
            ============================================ */
         @media (max-width: 1024px) {
             nav > .nav-links { display: none; }
@@ -657,31 +657,44 @@
             .gallery-hero h1 { font-size: clamp(38px, 10vw, 72px); letter-spacing: -2px; margin-bottom: 16px; }
             .gallery-hero p { font-size: 10px; letter-spacing: 3px; line-height: 1.7; }
             
-            .filter-container { padding: 0 20px; margin-bottom: 40px; gap: 8px; }
-            .filter-btn { padding: 10px 18px; font-size: 10px; letter-spacing: 1.5px; }
+            .filter-container { padding: 0 16px; margin-bottom: 30px; gap: 8px; }
+            .filter-btn { padding: 8px 14px; font-size: 10px; letter-spacing: 1.5px; }
             
-            .gallery-section { padding: 0 20px 80px; }
+            .gallery-section { padding: 0 16px 80px; }
             
-            /* 📱 Smaller grid items on tablet */
+            /* 📱 4 COLUMNS on tablet */
             .gallery-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 12px; 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 8px; 
             }
             
-            /* Photos: 4:3 aspect ratio instead of 1:1 */
+            /* Photos: 1:1 square */
             .gallery-item {
-                aspect-ratio: 4 / 3;
+                aspect-ratio: 1 / 1;
+                border-radius: 10px;
             }
             
-            /* Videos: much smaller on tablet */
+            /* Videos: span 2 columns for visibility */
             .gallery-item.video-item { 
-                max-height: 280px;
-                min-height: 180px;
+                grid-column: span 2;
+                aspect-ratio: 16 / 9;
+                max-height: none;
+                min-height: auto;
             }
             
-            .gallery-item-overlay { opacity: 1; padding: 16px; }
-            .gallery-item-overlay h3 { font-size: 14px; }
-            .gallery-item-overlay p { font-size: 9px; }
+            /* Smaller overlays on tablet */
+            .gallery-item-overlay { 
+                opacity: 1; 
+                padding: 10px; 
+            }
+            .gallery-item-overlay h3 { 
+                font-size: 11px; 
+                margin-bottom: 2px;
+            }
+            .gallery-item-overlay p { 
+                font-size: 8px; 
+                letter-spacing: 1px;
+            }
             .gallery-item-overlay .view-icon { display: none; }
             
             /* Lightbox stays large */
@@ -699,38 +712,65 @@
         }
 
         /* ============================================
-           📱 MOBILE (up to 480px)
+           📱 MOBILE (up to 480px) - 4 per row
            ============================================ */
         @media (max-width: 480px) {
             nav { padding: 12px 16px; }
             .logo img { height: 34px; }
             
-            .gallery-hero { padding: 100px 20px 32px; min-height: 40vh; }
-            .gallery-hero h1 { font-size: clamp(34px, 11vw, 56px); letter-spacing: -1px; }
+            .gallery-hero { padding: 100px 16px 24px; min-height: 35vh; }
+            .gallery-hero h1 { font-size: clamp(32px, 11vw, 48px); letter-spacing: -1px; margin-bottom: 12px; }
             .gallery-hero p { font-size: 9px; letter-spacing: 2.5px; }
             
-            .filter-container { padding: 0 16px; margin-bottom: 32px; gap: 6px; }
-            .filter-btn { padding: 8px 14px; font-size: 9px; letter-spacing: 1px; }
+            .filter-container { padding: 0 12px; margin-bottom: 24px; gap: 6px; }
+            .filter-btn { padding: 7px 12px; font-size: 9px; letter-spacing: 1px; }
             
-            .gallery-section { padding: 0 16px 60px; }
+            .gallery-section { padding: 0 12px 60px; }
             
-            /* 📱 Single column, smaller items */
+            /* 📱 4 COLUMNS on mobile */
             .gallery-grid { 
-                grid-template-columns: 1fr; 
-                gap: 14px; 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 6px; 
             }
             
-            /* Photos: 4:5 aspect ratio (portrait) */
+            /* Photos: 1:1 square */
             .gallery-item {
-                aspect-ratio: 4 / 5;
-                max-width: 100%;
+                aspect-ratio: 1 / 1;
+                border-radius: 8px;
             }
             
-            /* Videos: much smaller on mobile */
+            /* Videos: span 2 columns */
             .gallery-item.video-item { 
-                max-height: 240px;
-                min-height: 160px;
+                grid-column: span 2;
+                aspect-ratio: 16 / 9;
+                max-height: none;
+                min-height: auto;
             }
+            
+            /* Even smaller overlays on mobile */
+            .gallery-item-overlay { 
+                opacity: 1; 
+                padding: 6px; 
+            }
+            .gallery-item-overlay h3 { 
+                font-size: 9px; 
+                margin-bottom: 1px;
+                line-height: 1.2;
+            }
+            .gallery-item-overlay p { 
+                font-size: 7px; 
+                letter-spacing: 0.5px;
+                display: none; /* hide on mobile - too small */
+            }
+            
+            /* Smaller video badge */
+            .video-badge {
+                top: 4px;
+                left: 4px;
+                padding: 2px 6px;
+                font-size: 7px;
+            }
+            .video-badge i { font-size: 7px; }
             
             /* Lightbox stays full size */
             .lightbox-nav { width: 40px; height: 40px; font-size: 14px; }
