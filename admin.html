@@ -19,6 +19,7 @@
             --danger: #ff4444;
             --success: #00cc66;
             --gold: #FFD700;
+            --video-red: #ff3b30;
         }
         body {
             background: var(--bg);
@@ -27,6 +28,7 @@
             min-height: 100vh;
         }
 
+        /* Login Screen */
         .login-screen {
             min-height: 100vh;
             display: flex;
@@ -140,6 +142,54 @@
         .featured-toggle .star-icon {
             font-size: 20px;
             color: var(--gold);
+        }
+
+        /* Media Type Toggle */
+        .media-type-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .media-type-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .media-type-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+        }
+
+        .media-type-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        .media-type-btn.video-btn.active {
+            background: var(--video-red);
+            border-color: var(--video-red);
+            color: var(--white);
+        }
+
+        .media-type-btn i {
+            font-size: 16px;
         }
 
         .btn {
@@ -315,9 +365,22 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
+        .upload-btn-cloudinary.video-mode {
+            border-color: rgba(255, 59, 48, 0.3);
+        }
+
+        .upload-btn-cloudinary.video-mode:hover {
+            border-color: var(--video-red);
+            background: rgba(255, 59, 48, 0.05);
+        }
+
         .upload-btn-cloudinary i {
             font-size: 28px;
             color: var(--muted);
+        }
+
+        .upload-btn-cloudinary.video-mode i {
+            color: var(--video-red);
         }
 
         .preview-img {
@@ -326,6 +389,15 @@
             border-radius: 10px;
             margin-bottom: 20px;
             display: none;
+        }
+
+        .preview-video {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            background: #000;
         }
 
         .form-row {
@@ -356,11 +428,13 @@
             background: rgba(255, 215, 0, 0.03);
         }
 
-        .item-row img {
+        .item-row img,
+        .item-row video {
             width: 80px;
             height: 80px;
             object-fit: cover;
             border-radius: 8px;
+            background: #000;
         }
 
         .item-info h4 { font-size: 15px; margin-bottom: 4px; }
@@ -379,6 +453,29 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             margin-left: 8px;
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+
+        .type-badge.video {
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--video-red);
+        }
+
+        .type-badge.photo {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--success);
         }
 
         .item-actions { display: flex; gap: 8px; }
@@ -425,10 +522,12 @@
             .panel { padding: 20px; }
             .form-row { grid-template-columns: 1fr; }
             .item-row { grid-template-columns: 60px 1fr; }
-            .item-row img { width: 60px; height: 60px; }
+            .item-row img, .item-row video { width: 60px; height: 60px; }
             .item-actions { grid-column: 1 / -1; justify-content: flex-end; }
             .tabs { gap: 4px; }
             .tab { padding: 12px 16px; font-size: 11px; }
+            .media-type-toggle { flex-direction: column; }
+            .media-type-btn { padding: 12px 16px; font-size: 12px; }
         }
     </style>
 </head>
@@ -471,14 +570,25 @@
             <!-- PORTFOLIO TAB -->
             <div class="tab-content active" id="portfolioTab">
                 <div class="panel">
-                    <h3>Add New Photo</h3>
+                    <h3>Add New Media</h3>
+
+                    <!-- Media Type Toggle -->
+                    <div class="media-type-toggle">
+                        <button type="button" class="media-type-btn active" id="photoTypeBtn">
+                            <i class="fas fa-image"></i> Photo
+                        </button>
+                        <button type="button" class="media-type-btn video-btn" id="videoTypeBtn">
+                            <i class="fas fa-video"></i> Video
+                        </button>
+                    </div>
 
                     <button class="upload-btn-cloudinary" id="cloudinaryUploadBtn">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Click to Upload Photo</span>
+                        <span id="uploadBtnText">Click to Upload Photo</span>
                     </button>
 
                     <img class="preview-img" id="previewImg" alt="Preview">
+                    <video class="preview-video" id="previewVideo" controls></video>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -493,6 +603,11 @@
                                 <option value="Weddings">Weddings</option>
                                 <option value="Corporates">Corporates</option>
                                 <option value="Premium Visual Storytelling">Premium Visual Storytelling</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Architecture">Architecture</option>
+                                <option value="Still Life">Still Life</option>
+                                <option value="Landscape">Landscape</option>
                             </select>
                         </div>
                     </div>
@@ -512,7 +627,7 @@
                         <input type="checkbox" id="featuredCheck">
                         <div class="toggle-label">
                             <span class="toggle-title">⭐ Feature on Homepage</span>
-                            <span class="toggle-desc">Show this photo in the "Selected Works" section on the main page</span>
+                            <span class="toggle-desc">Show this in the "Selected Works" section on the main page</span>
                         </div>
                         <i class="fas fa-star star-icon"></i>
                     </label>
@@ -523,7 +638,7 @@
                 <div class="panel">
                     <h3>Current Portfolio</h3>
                     <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">
-                        Click the ⭐ star to feature/unfeature photos on the homepage.
+                        Click ⭐ to feature on homepage. Videos show in 16:9 format.
                     </p>
                     <div class="items-list" id="portfolioList"></div>
                 </div>
@@ -648,25 +763,63 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // ============ CLOUDINARY UPLOAD ============
-        let uploadedImageUrl = null;
+        // ============================================
+        // MEDIA TYPE TOGGLE (Photo/Video)
+        // ============================================
+        let currentMediaType = 'photo';
+        const photoTypeBtn = document.getElementById('photoTypeBtn');
+        const videoTypeBtn = document.getElementById('videoTypeBtn');
+        const uploadBtnText = document.getElementById('uploadBtnText');
+        const uploadBtn = document.getElementById('cloudinaryUploadBtn');
         const previewImg = document.getElementById('previewImg');
+        const previewVideo = document.getElementById('previewVideo');
+
+        photoTypeBtn.addEventListener('click', () => {
+            currentMediaType = 'photo';
+            photoTypeBtn.classList.add('active');
+            videoTypeBtn.classList.remove('active');
+            uploadBtnText.textContent = 'Click to Upload Photo';
+            uploadBtn.classList.remove('video-mode');
+            uploadBtn.querySelector('i').className = 'fas fa-cloud-upload-alt';
+            previewImg.style.display = 'block';
+            previewVideo.style.display = 'none';
+            previewVideo.pause();
+        });
+
+        videoTypeBtn.addEventListener('click', () => {
+            currentMediaType = 'video';
+            videoTypeBtn.classList.add('active');
+            photoTypeBtn.classList.remove('active');
+            uploadBtnText.textContent = 'Click to Upload Video';
+            uploadBtn.classList.add('video-mode');
+            uploadBtn.querySelector('i').className = 'fas fa-film';
+            previewImg.style.display = 'none';
+            previewVideo.style.display = 'block';
+        });
+
+        // ============================================
+        // CLOUDINARY UPLOAD (Photo + Video)
+        // ============================================
+        let uploadedMediaUrl = null;
         const publishBtn = document.getElementById('publishBtn');
 
-        document.getElementById('cloudinaryUploadBtn').addEventListener('click', () => {
+        uploadBtn.addEventListener('click', () => {
             if (CLOUDINARY_CONFIG.cloudName === 'YOUR_CLOUD_NAME') {
                 showToast('Please configure Cloudinary first!', 'error');
                 return;
             }
+
+            const isVideo = currentMediaType === 'video';
 
             const widget = cloudinary.createUploadWidget({
                 cloudName: CLOUDINARY_CONFIG.cloudName,
                 uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
                 sources: ['local', 'camera', 'url'],
                 multiple: false,
-                maxFileSize: 10000000,
+                maxFileSize: isVideo ? 100000000 : 10000000,
+                resourceType: isVideo ? 'video' : 'image',
                 cropping: false,
-                clientAllowedFormats: ['jpg', 'png', 'webp', 'jpeg'],
+                clientAllowedFormats: isVideo ? ['mp4', 'mov', 'webm'] : ['jpg', 'png', 'webp', 'jpeg'],
                 styles: {
                     palette: {
                         window: "#141414",
@@ -686,12 +839,21 @@
                 }
             }, (error, result) => {
                 if (!error && result && result.event === 'success') {
-                    uploadedImageUrl = result.info.secure_url;
-                    previewImg.src = uploadedImageUrl;
-                    previewImg.style.display = 'block';
+                    uploadedMediaUrl = result.info.secure_url;
+
+                    if (isVideo) {
+                        previewVideo.src = uploadedMediaUrl;
+                        previewVideo.style.display = 'block';
+                        previewImg.style.display = 'none';
+                    } else {
+                        previewImg.src = uploadedMediaUrl;
+                        previewImg.style.display = 'block';
+                        previewVideo.style.display = 'none';
+                    }
+
                     publishBtn.disabled = false;
-                    showToast('Image uploaded! Fill in details and publish.', 'success');
-                    console.log('Cloudinary URL:', uploadedImageUrl);
+                    showToast(isVideo ? '🎬 Video uploaded! Fill in details and publish.' : '📸 Image uploaded! Fill in details and publish.', 'success');
+                    console.log('Media URL:', uploadedMediaUrl);
                 } else if (error) {
                     console.error('Cloudinary error:', error);
                     showToast('Upload failed: ' + (error.message || 'Unknown error'), 'error');
@@ -701,10 +863,12 @@
             widget.open();
         });
 
-        // ============ PUBLISH TO FIREBASE ============
+        // ============================================
+        // PUBLISH TO FIREBASE
+        // ============================================
         publishBtn.addEventListener('click', async () => {
-            if (!uploadedImageUrl) {
-                showToast('Please upload an image first', 'error');
+            if (!uploadedMediaUrl) {
+                showToast('Please upload media first', 'error');
                 return;
             }
 
@@ -728,19 +892,25 @@
                     category,
                     year,
                     order,
-                    featured,  // ← Save featured status
-                    imageUrl: uploadedImageUrl,
+                    featured,
+                    type: currentMediaType,
+                    imageUrl: uploadedMediaUrl,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                const msg = featured 
-                    ? 'Photo published & featured on homepage!' 
-                    : 'Photo published to gallery!';
+                const typeLabel = currentMediaType === 'video' ? 'Video' : 'Photo';
+                const msg = featured
+                    ? `${typeLabel} published & featured on homepage!`
+                    : `${typeLabel} published to gallery!`;
                 showToast(msg, 'success');
 
                 // Reset form
-                uploadedImageUrl = null;
+                uploadedMediaUrl = null;
                 previewImg.style.display = 'none';
+                previewImg.src = '';
+                previewVideo.style.display = 'none';
+                previewVideo.src = '';
+                previewVideo.pause();
                 document.getElementById('photoTitle').value = '';
                 document.getElementById('photoYear').value = '';
                 document.getElementById('photoOrder').value = '1';
@@ -755,32 +925,49 @@
             }
         });
 
-        // ============ LOAD PORTFOLIO LIST ============
+        // ============================================
+        // LOAD PORTFOLIO LIST
+        // ============================================
         function loadPortfolioList() {
             const list = document.getElementById('portfolioList');
             db.collection('portfolio').onSnapshot(snapshot => {
                 list.innerHTML = '';
                 if (snapshot.empty) {
-                    list.innerHTML = '<p style="color:var(--muted)">No photos yet. Upload your first one above.</p>';
+                    list.innerHTML = '<p style="color:var(--muted)">No media yet. Upload your first one above.</p>';
                     return;
                 }
                 snapshot.forEach(doc => {
                     const d = doc.data();
                     const isFeatured = d.featured === true;
+                    const isVideo = d.type === 'video';
                     const row = document.createElement('div');
                     row.className = 'item-row' + (isFeatured ? ' featured-item' : '');
+
+                    const mediaHTML = isVideo
+                        ? `<video src="${d.imageUrl}" muted preload="metadata"></video>`
+                        : `<img src="${d.imageUrl}" alt="${d.title}">`;
+
+                    const typeBadge = isVideo
+                        ? '<span class="type-badge video"><i class="fas fa-video"></i> Video</span>'
+                        : '<span class="type-badge photo"><i class="fas fa-image"></i> Photo</span>';
+
+                    const featuredBadge = isFeatured
+                        ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>'
+                        : '';
+
                     row.innerHTML = `
-                        <img src="${d.imageUrl}" alt="${d.title}">
+                        ${mediaHTML}
                         <div class="item-info">
                             <h4>
                                 ${d.title}
-                                ${isFeatured ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
+                                ${typeBadge}
+                                ${featuredBadge}
                             </h4>
                             <p>${d.category} • ${d.year} • Order: ${d.order}</p>
                         </div>
                         <div class="item-actions">
-                            <button class="btn btn-star ${isFeatured ? 'featured' : ''}" 
-                                    onclick="toggleFeatured('${doc.id}', ${!isFeatured})" 
+                            <button class="btn btn-star ${isFeatured ? 'featured' : ''}"
+                                    onclick="toggleFeatured('${doc.id}', ${!isFeatured})"
                                     title="${isFeatured ? 'Remove from homepage' : 'Feature on homepage'}">
                                 <i class="fas fa-star"></i>
                             </button>
@@ -792,7 +979,9 @@
             });
         }
 
-        // ============ TOGGLE FEATURED STATUS ============
+        // ============================================
+        // TOGGLE FEATURED STATUS
+        // ============================================
         window.toggleFeatured = async (id, featured) => {
             try {
                 await db.collection('portfolio').doc(id).update({ featured: featured });
@@ -803,16 +992,18 @@
         };
 
         window.deletePortfolio = async (id) => {
-            if (!confirm('Delete this photo?')) return;
+            if (!confirm('Delete this media?')) return;
             try {
                 await db.collection('portfolio').doc(id).delete();
-                showToast('Photo deleted', 'success');
+                showToast('Media deleted', 'success');
             } catch (err) {
                 showToast('Delete failed: ' + err.message, 'error');
             }
         };
 
-        // ============ REVIEWS ============
+        // ============================================
+        // REVIEWS
+        // ============================================
         document.getElementById('addReviewBtn').addEventListener('click', async () => {
             const name = document.getElementById('reviewName').value.trim();
             const role = document.getElementById('reviewRole').value.trim();
